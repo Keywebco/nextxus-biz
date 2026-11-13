@@ -13,10 +13,21 @@ is live on next-xus.biz yet.** GitHub Pages / DNS wiring has not been done.
 ## What is in this repo
 
 - `full-federation.html` — the full Federation Netflix interface: 96 tiles,
-  14 rows, 60 click-to-play videos. Video header (the main logo video),
+  14 rows, 60 click-to-play videos. Video header (`video-header.mp4`,
+  Roger's main logo video, renamed 2026-11-13 on his word "Video header"),
   floating Google search (25 Federation sites), guide-and-tour bot,
   meeting room with mini-browser windows (ChatGPT, Grok, video call),
   Crab Nebula background, frosted cards, light text.
+- `full-federation-v2.html` — Federation desktop v2 (2026-11-13): the
+  rebuild after Roger saw v1 on mobile and called it useless. A desktop,
+  not a video library — fixed nebula, no side menu, no wide menu under the
+  header, welcome + sign-up box first, then a category box per category,
+  then a horizontal informational line (tap a card to go to its row), then
+  the linkage rows: small uniform tiles, looping, 15 categories, 205 tiles.
+  Every tile opens in a mini browser with an attached buy/get-it pop-up.
+  Bottom dock with Home, Search, Guide, Menu, Background, Close all.
+  See `FEDERATION-DESKTOP-V2-REPORT-2026-11-13.md`. Branch-first PR, not
+  merged; PR #2 (the v1 header fix) is superseded by v2 and left open.
 - `index.html` — the .biz Netflix / throne draft (5,327 B).
 - `primary-landing.html` — the primary landing page draft (four windows).
 - `ai-page-template.html` — per-AI / per-business page template (business
@@ -29,7 +40,8 @@ is live on next-xus.biz yet.** GitHub Pages / DNS wiring has not been done.
   including the three Echo renders (42 in space, 43 the vision, 44 gear
   halo), the 200 Year Legacy Package (program-34, split at ~10 s,
   `legacy-package-part2.mp4`), the guide bot (slow 0.75× and fast
-  original), the seals, the main logo video (`main-logo.mp4`), the book
+  original), the seals, the video header (`video-header.mp4`, was
+  `main-logo.mp4`, renamed 2026-11-13), the book
   covers, and the Crab Nebula (`crab-nebula.jpg`, verified JWST image).
 - Reports: `FULL-FEDERATION-REPORT-2026-11-12.md` (the full build log),
   `MERGE-PLAN-2026-11-12.md`, `ECHO-VISION-2026-11-12.md`,

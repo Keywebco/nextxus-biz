@@ -59,7 +59,7 @@
     display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
   .tile .txt p{margin:0;font-size:.82rem;line-height:1.25;color:#f2f2f2;
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .tile .open{flex:0 0 auto;margin:.35rem .5rem .5rem;background:#f5c542;color:#111;border:0;
+  .tile .open{flex:0 0 auto;display:block;text-align:center;margin:.35rem .5rem .5rem;background:#f5c542;color:#111;border:0;
     border-radius:7px;padding:.35rem 0;font-size:.9rem;font-weight:700;cursor:pointer;min-height:34px}
   .tile.flash{outline:3px solid #f5c542;outline-offset:2px}
   .tile.empty{border-style:dashed}
@@ -232,7 +232,23 @@ function tileHTML(t, catId){
   return '<article class="tile'+(t.empty?' empty':'')+'" data-cat="'+esc(catId)+'" data-title="'+esc(t.t)+'" tabindex="0" role="button" aria-label="Open '+esc(t.t)+'">'
     + img
     + '<div class="txt"><h3>'+esc(t.t)+'</h3><p>'+esc(t.d)+'</p></div>'
-    + '<button type="button" class="open">Open ↗</button></article>';
+    + '<span class="open" aria-hidden="true">Open ↗</span></article>';
+}
+/* One wiring per tile, ever. The guard is a JS property on the element, NOT
+   a data attribute: makeLoop duplicates rails with innerHTML, which destroys
+   old tile elements and their listeners — a data attribute would survive the
+   copy and wrongly mark fresh, unwired tiles as wired. A property dies with
+   the element, so duplicated tiles get wired and existing tiles never twice.
+   (Fix 2026-11-13: before this, buildAll and makeLoop each attached their
+   own click handler to every tile, so one tap called openTile twice — two
+   mini browsers and two buy pop-ups.) */
+function wireTile(el){
+  if(el._wired) return;
+  el._wired = true;
+  el.addEventListener('click', function(){ openTile(findTile(el)); });
+  el.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openTile(findTile(el)); }
+  });
 }
 function buildAll(){
   var wb = document.getElementById('welcomeBoxes');
@@ -291,15 +307,7 @@ function buildAll(){
   });
 
   document.querySelectorAll('.rail').forEach(function(rail){ makeLoop(rail); });
-  document.querySelectorAll('.tile').forEach(function(el){
-    el.addEventListener('click', function(e){
-      if(e.target.classList.contains('open')){ e.stopPropagation(); }
-      openTile(findTile(el));
-    });
-    el.addEventListener('keydown', function(e){
-      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openTile(findTile(el)); }
-    });
-  });
+  document.querySelectorAll('.tile').forEach(wireTile);
 }
 function findTile(el){
   var catId = el.getAttribute('data-cat'), title = el.getAttribute('data-title');
@@ -321,15 +329,7 @@ function makeLoop(rail){
     while(rail.scrollWidth < rail.clientWidth * 2 + 200 && guard < 6){
       rail.innerHTML += rail.innerHTML; guard++;
     }
-    rail.querySelectorAll('.tile').forEach(function(el){
-      if(!el.dataset.wired){
-        el.dataset.wired = '1';
-        el.addEventListener('click', function(e){ openTile(findTile(el)); });
-        el.addEventListener('keydown', function(e){
-          if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openTile(findTile(el)); }
-        });
-      }
-    });
+    rail.querySelectorAll('.tile').forEach(wireTile);
   }
   function wrap(){
     var half = rail.scrollWidth / 2;
@@ -408,6 +408,10 @@ function openTile(t){
       win.style.top = win.dataset.ot; win.style.left = win.dataset.ol;
       win.style.width = win.dataset.ow; win.style.height = win.dataset.oh;
       delete win.dataset.maxed;
+      if(win._buy && win._buy.dataset.ol){
+        win._buy.style.left = win._buy.dataset.ol; win._buy.style.top = win._buy.dataset.ot;
+        delete win._buy.dataset.ol; delete win._buy.dataset.ot;
+      }
     } else {
       win.dataset.ot = win.style.top; win.dataset.ol = win.style.left;
       win.dataset.ow = win.style.width; win.dataset.oh = win.style.height;
@@ -416,9 +420,22 @@ function openTile(t){
       win.style.width = (window.innerWidth - 16) + 'px';
       win.style.height = (window.innerHeight - (hb2 > 0 ? hb2 + 8 : 8) - 66) + 'px';
       win.dataset.maxed = '1';
+      /* a maximised window covers nearly the whole screen, so its buy
+         pop-up would sit behind it — pin the pop-up to the top-right corner
+         below the header, above the window, and put it back on restore */
+      if(win._buy){
+        var b = win._buy;
+        b.dataset.ol = b.style.left; b.dataset.ot = b.style.top;
+        b.style.left = Math.max(8, window.innerWidth - (b.offsetWidth || 260) - 8) + 'px';
+        b.style.top = (hb2 > 0 ? hb2 + 8 : 8) + 'px';
+        b.style.zIndex = (parseInt(win.style.zIndex, 10) || 0) + 1;
+      }
     }
   });
-  win.addEventListener('pointerdown', function(){ win.style.zIndex = zTop++; });
+  win.addEventListener('pointerdown', function(){
+    win.style.zIndex = zTop++;
+    if(win._buy) win._buy.style.zIndex = (parseInt(win.style.zIndex, 10) || 0) + 1;
+  });
   drag(win, win.querySelector('.bar'));
   resizeHandle(win, win.querySelector('.resize'));
   win.addEventListener('click', function(e){

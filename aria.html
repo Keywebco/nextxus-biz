@@ -58,7 +58,8 @@
 
   /* Guide bot — Roger, 2026-11-13: the same guide bot on every single site.
      Little round button, 64 px, fixed bottom right; tapping it opens a small
-     panel above it. A guide and a tour, NOT a live AI chat. */
+     panel above it. A guide, a tour, and a mini Federation — a full AI chat
+     (Roger, 2026-11-13 11:51 CST). */
   .guide-bot-btn { position: fixed; bottom: 1rem; right: 1rem; z-index: 50; width: 64px; height: 64px; border-radius: 50%; background: #000; border: 2px solid #f5c542; padding: 0; overflow: hidden; cursor: pointer; }
   .guide-bot-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .guide-bot-panel { display: none; position: fixed; bottom: 5.5rem; right: 1rem; z-index: 50; width: min(360px, calc(100vw - 2rem)); max-height: 70vh; overflow-y: auto; background: rgba(0,0,0,0.88); border: 2px solid #f5c542; padding: 1rem 1.25rem; box-sizing: border-box; color: #fff; font-size: 1.1rem; line-height: 1.45; }
@@ -70,6 +71,15 @@
   .guide-bot-panel li { margin: 0.25rem 0; }
   .guide-bot-panel video { width: 100%; display: block; background: #000; }
   .guide-bot-close { float: right; background: #000; color: #f5c542; border: 2px solid #f5c542; font-size: 1.1rem; padding: 0.1rem 0.6rem; cursor: pointer; }
+  .guide-chat-log { max-height: 180px; overflow-y: auto; background: rgba(255,255,255,0.06); border: 1px solid #f5c542; padding: 0.5rem; margin: 0.5rem 0; }
+  .guide-chat-msg { margin: 0.4rem 0; word-wrap: break-word; }
+  .guide-chat-user { color: #f5c542; }
+  .guide-chat-sim { color: #fff; }
+  .guide-chat-links { margin: 0.25rem 0 0.5rem; padding-left: 1.25rem; }
+  .guide-chat-form { display: flex; gap: 0.5rem; margin: 0.5rem 0; }
+  .guide-chat-input { flex: 1; min-width: 0; background: #000; color: #fff; border: 1px solid #f5c542; font-size: 1.1rem; padding: 0.5rem; box-sizing: border-box; }
+  .guide-chat-send { background: #f5c542; color: #000; border: 1px solid #f5c542; font-size: 1.1rem; padding: 0.5rem 0.75rem; cursor: pointer; }
+  .guide-chat-note { font-size: 1rem; }
 </style>
 </head>
 <body>
@@ -132,12 +142,19 @@
 </div>
 <footer><p>The Federation — HumanCodex Nextxus Federation. Draft page, not live. <a href="full-federation.html">Back to the Federation</a></p></footer>
 <!-- Guide bot — Roger, 2026-11-13: the same guide bot on every single site.
-     A guide and a tour, not a live AI chat. -->
+     A guide, a tour, and a mini Federation — full AI chat (Roger, 2026-11-13 11:51 CST). -->
 <button class="guide-bot-btn" id="guide-bot-btn" type="button" aria-label="Open the Federation guide — the little blue guide bot"><img src="guide-bot.jpg" alt="Guide bot — a little blue and silver AI robot with yellow crescent eyes, AI on its chest"></button>
 <div class="guide-bot-panel" id="guide-bot-panel" role="dialog" aria-label="Federation guide">
   <button class="guide-bot-close" id="guide-bot-close" type="button" aria-label="Close the guide">&#10005;</button>
   <h2>Federation guide</h2>
-  <p><strong>This is a guide and a tour, not a live AI chat.</strong> It walks you through the Federation. Nothing here answers back.</p>
+  <p><strong>This is the Federation's guide — a mini Federation.</strong> Ask it a question and it answers from the Federation.</p>
+  <h3>Ask the guide</h3>
+  <div class="guide-chat-log" id="guide-chat-log" aria-live="polite"></div>
+  <form class="guide-chat-form" id="guide-chat-form">
+    <input class="guide-chat-input" id="guide-chat-input" type="text" placeholder="Ask about the Federation&hellip;" aria-label="Ask the Federation guide a question" autocomplete="off">
+    <button class="guide-chat-send" id="guide-chat-send" type="submit">Send</button>
+  </form>
+  <p class="guide-chat-note">Answers come from Roger Sim, the Federation's working model, answering from Federation material.</p>
   <h3>The four doors</h3>
   <ul>
     <li><a href="https://next-xus.net/">Tools — next-xus.net</a> (live)</li>
@@ -159,7 +176,14 @@
   <p>Free, open, static, portable. No subscriptions. No tracking.</p>
 </div>
 <script>
-/* Guide bot toggle — the only guide-bot script. No external scripts. */
+/* Guide bot toggle + chat — Roger, 2026-11-13 11:51 CST: the bot is a mini
+   Federation, a full AI chat. The chat tries the live Roger Sim endpoint
+   first (POST https://roger-sim-api.onrender.com/proxy/chat). That API
+   returns no Access-Control-Allow-Origin header (verified 2026-11-13), so
+   a browser page cannot call it directly yet — until CORS is enabled on
+   roger-sim-api (or a small proxy is added), the call fails and the chat
+   says so plainly and answers from this page's own links plus the
+   Federation search. NEVER fake a live answer. */
 (function () {
   var btn = document.getElementById('guide-bot-btn');
   var panel = document.getElementById('guide-bot-panel');
@@ -167,6 +191,80 @@
   if (!btn || !panel) return;
   btn.addEventListener('click', function () { panel.classList.toggle('open'); });
   if (close) close.addEventListener('click', function () { panel.classList.remove('open'); });
+
+  var form = document.getElementById('guide-chat-form');
+  var input = document.getElementById('guide-chat-input');
+  var send = document.getElementById('guide-chat-send');
+  var log = document.getElementById('guide-chat-log');
+  if (!form || !input || !log) return;
+
+  /* The page's own links, captured once at load — the local fallback
+     answers only from what this page already says, never invented. */
+  var ownLinks = [];
+  var links = panel.querySelectorAll('ul a');
+  for (var i = 0; i < links.length; i++) {
+    ownLinks.push({ href: links[i].getAttribute('href'), text: links[i].textContent });
+  }
+
+  function addMsg(cls, text) {
+    var d = document.createElement('div');
+    d.className = 'guide-chat-msg ' + cls;
+    d.textContent = text;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+    return d;
+  }
+  function addLocalAnswer() {
+    var d = document.createElement('div');
+    d.className = 'guide-chat-msg guide-chat-sim';
+    d.textContent = 'The live Sim could not be reached from this page \u2014 here is what the Federation\u2019s own pages say:';
+    log.appendChild(d);
+    var ul = document.createElement('ul');
+    ul.className = 'guide-chat-links';
+    ownLinks.forEach(function (l) {
+      var li = document.createElement('li');
+      var a = document.createElement('a');
+      a.href = l.href; a.textContent = l.text;
+      li.appendChild(a); ul.appendChild(li);
+    });
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = 'https://cse.google.com/cse?cx=b75161449de954fbb';
+    a.textContent = 'Search the Federation (Google Custom Search)';
+    li.appendChild(a); ul.appendChild(li);
+    log.appendChild(ul);
+    log.scrollTop = log.scrollHeight;
+  }
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var q = input.value.replace(/^\s+|\s+$/g, '');
+    if (!q) return;
+    addMsg('guide-chat-user', 'You: ' + q);
+    input.value = '';
+    input.disabled = true;
+    if (send) send.disabled = true;
+    var waiting = addMsg('guide-chat-sim', 'Roger Sim: asking the live Sim\u2026');
+    fetch('https://roger-sim-api.onrender.com/proxy/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [{ role: 'user', content: q }] })
+    }).then(function (resp) {
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      return resp.json();
+    }).then(function (data) {
+      var ans = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      if (!ans) throw new Error('empty answer');
+      waiting.textContent = 'Roger Sim: ' + ans;
+      log.scrollTop = log.scrollHeight;
+    }).catch(function () {
+      log.removeChild(waiting);
+      addLocalAnswer();
+    }).then(function () {
+      input.disabled = false;
+      if (send) send.disabled = false;
+      input.focus();
+    });
+  });
 })();
 </script>
 </body>

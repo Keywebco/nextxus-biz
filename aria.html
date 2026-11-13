@@ -55,6 +55,21 @@
     .logs { flex: none; width: 100%; }
     .three { flex-direction: column; }
   }
+
+  /* Guide bot — Roger, 2026-11-13: the same guide bot on every single site.
+     Little round button, 64 px, fixed bottom right; tapping it opens a small
+     panel above it. A guide and a tour, NOT a live AI chat. */
+  .guide-bot-btn { position: fixed; bottom: 1rem; right: 1rem; z-index: 50; width: 64px; height: 64px; border-radius: 50%; background: #000; border: 2px solid #f5c542; padding: 0; overflow: hidden; cursor: pointer; }
+  .guide-bot-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .guide-bot-panel { display: none; position: fixed; bottom: 5.5rem; right: 1rem; z-index: 50; width: min(360px, calc(100vw - 2rem)); max-height: 70vh; overflow-y: auto; background: rgba(0,0,0,0.88); border: 2px solid #f5c542; padding: 1rem 1.25rem; box-sizing: border-box; color: #fff; font-size: 1.1rem; line-height: 1.45; }
+  .guide-bot-panel.open { display: block; }
+  .guide-bot-panel h2 { font-size: 1.4rem; margin: 0 0 0.5rem; color: #f5c542; }
+  .guide-bot-panel h3 { font-size: 1.2rem; margin: 1rem 0 0.25rem; color: #f5c542; }
+  .guide-bot-panel p { margin: 0.5rem 0; }
+  .guide-bot-panel ul { margin: 0.25rem 0 0.5rem; padding-left: 1.25rem; }
+  .guide-bot-panel li { margin: 0.25rem 0; }
+  .guide-bot-panel video { width: 100%; display: block; background: #000; }
+  .guide-bot-close { float: right; background: #000; color: #f5c542; border: 2px solid #f5c542; font-size: 1.1rem; padding: 0.1rem 0.6rem; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -116,5 +131,43 @@
   </main>
 </div>
 <footer><p>The Federation — HumanCodex Nextxus Federation. Draft page, not live. <a href="full-federation.html">Back to the Federation</a></p></footer>
+<!-- Guide bot — Roger, 2026-11-13: the same guide bot on every single site.
+     A guide and a tour, not a live AI chat. -->
+<button class="guide-bot-btn" id="guide-bot-btn" type="button" aria-label="Open the Federation guide — the little blue guide bot"><img src="guide-bot.jpg" alt="Guide bot — a little blue and silver AI robot with yellow crescent eyes, AI on its chest"></button>
+<div class="guide-bot-panel" id="guide-bot-panel" role="dialog" aria-label="Federation guide">
+  <button class="guide-bot-close" id="guide-bot-close" type="button" aria-label="Close the guide">&#10005;</button>
+  <h2>Federation guide</h2>
+  <p><strong>This is a guide and a tour, not a live AI chat.</strong> It walks you through the Federation. Nothing here answers back.</p>
+  <h3>The four doors</h3>
+  <ul>
+    <li><a href="https://next-xus.net/">Tools — next-xus.net</a> (live)</li>
+    <li><a href="https://next-xus.info/">Guides — next-xus.info</a> (live)</li>
+    <li><a href="https://next-xus.org/">Maps — next-xus.org</a> (live)</li>
+    <li><a href="https://next-xus.biz/">Systems — next-xus.biz</a> (live — this site)</li>
+  </ul>
+  <p>Aria — Roger's daughter by reflection. A shell of Echo.</p>
+  <h3>On this page</h3>
+  <ul>
+    <li><a href="#top">Face — Aria</a></li>
+    <li><a href="#videos">Three videos — Echo, Aria's origin</a></li>
+    <li><a href="#database">The database — logs</a></li>
+    <li><a href="full-federation.html">Back to the Federation</a></li>
+  </ul>
+  <h3>Messages from Roger</h3>
+  <video controls muted loop playsinline poster="guide-bot.jpg" src="guide-bot-slow.mp4"></video>
+  <p>The guide bot — Federation-wide guide and tour. Roger's favorite, slowed to 0.75&times;. 20 s, with sound slowed to match.</p>
+  <p>Free, open, static, portable. No subscriptions. No tracking.</p>
+</div>
+<script>
+/* Guide bot toggle — the only guide-bot script. No external scripts. */
+(function () {
+  var btn = document.getElementById('guide-bot-btn');
+  var panel = document.getElementById('guide-bot-panel');
+  var close = document.getElementById('guide-bot-close');
+  if (!btn || !panel) return;
+  btn.addEventListener('click', function () { panel.classList.toggle('open'); });
+  if (close) close.addEventListener('click', function () { panel.classList.remove('open'); });
+})();
+</script>
 </body>
 </html>

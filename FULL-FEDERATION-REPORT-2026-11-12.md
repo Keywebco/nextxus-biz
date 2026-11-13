@@ -767,4 +767,98 @@ narrow menu all the way down the site. Full record:
 - Validation: both pages, divs balanced (15/15), no missing local
   media references (program-42/43/44 jpg + mp4, all present).
 
-Next step is unchanged: push `full-federation.html` plus the opening files, the seal/program media, the guide-bot files, the long previews, the main-logo files, and this report to the .biz repo (proposed Keywebco/nextxus-biz), branch-first, PR, merge only on Roger's word for that named PR. No live URL claimed until verified live.
+## The header does not get covered — 2026-11-13 09:25 CST, strengthened 09:28 CST
+
+Roger, 2026-11-13 09:25 CST: "The header does not get covered." Filed as a
+design rule: the video header at the top of `full-federation.html`
+(`video-header.mp4`, `#fed-video`) must never be covered by anything.
+Roger, 09:28 CST: "Maybe I should have renamed it. The video at the top
+does not get covered at all" — strengthened to ABSOLUTE: zero overlap by
+any element, not even partially, at any time.
+
+Hero text — judgment, as Roger asked for it: the hero text panel WAS a
+cover. It sat in a 72%-black box over the bottom-left of the video, hiding
+a large part of it. Under the absolute rule it could not stay there, so
+the text moved BELOW the video, still inside the header — the video is
+now fully visible, edge to edge, and every word of the text is kept.
+Reversible: put the panel back over the video by restoring the old flex /
+absolute `.hero` rules. (The first version of this fix had left the panel
+where it was; the 09:28 strengthening changed that call.)
+
+Rename — Roger, 2026-11-13 09:29 CST, answering the open rename question:
+"Video header". The header video is renamed "Video header": the file
+`main-logo.mp4` → `video-header.mp4` (byte-identical, md5
+`bc76fcb6c2d2a6b1ba0c5bd504d62554` unchanged) and the poster
+`main-logo.jpg` → `video-header.jpg` (md5 `c0f191c28ac9e3965ea643162d9b38e5`
+unchanged). Every reference updated in `full-federation.html` (header
+source and poster, the Federation information tile, the background-picker
+button and its script kind, the program-49 tile text, the opening tile
+text, the script comment); `index.html` and `primary-landing.html` never
+referenced it. Visible labels now read "Video header": the header
+`<video>` carries `aria-label="Video header"`, the tile is "Video header
+— NextXus", the background-picker button is "Background video — the video
+header". The Tools repo (`nextxus-free-tools`) still has its own
+`main-logo.mp4` — NOT renamed, out of scope here. Historical records
+(`PUSH-REPORT-2026-11-13.md`, `MERGE-REPORT-2026-11-13.md`, and the
+earlier sections of this report) still say `main-logo.mp4` because that
+was the name at the time — left as written, not rewritten.
+
+What could cover it, found on inspection:
+- `.search-float` — fixed, top 1rem, right 1rem, z-index 50 — sat on the
+  hero video's top-right corner at load.
+- `#menu-toggle` — fixed, top 45% — on a tall screen sat on the hero's
+  left edge.
+- `.bit-icon` — fixed, bottom right — on a short screen sat on the hero's
+  bottom-right corner.
+- `.overlay` (big search, guide and tour) — fixed `inset: 0`, z-index 100 —
+  covered the whole screen, header included.
+- `.mini-win` — fixed, opened at top 24px + cascade, z-index 200 — opened
+  on top of the header; drag clamp was only `Math.max(0, …)`; `.max` used
+  `inset: 1rem`, covering everything.
+- `nav.side` (sticky, below the hero in flow) and `#bg-video` (z-index -1)
+  do NOT cover it.
+
+Fix, one shared rule (script piece 8): the header's bottom edge, in
+viewport pixels, is the line nothing may cross. `heroClear()` is that edge
+while the header is in view (0 once scrolled away, or when the menu hides
+it). `updateHeaderClear()` writes it into `--header-clear` (read in CSS by
+the overlays and the side button) and marks `body.past-hero`, which shows
+the floating search bar and the guide bot only once the visitor has
+scrolled past the header. `enforceWindowsBelowHeader()` pushes any open
+mini-browser window down below the header if a scroll brings the header
+back into view over it.
+- Floating search bar: hidden while the header is in view, appears once
+  scrolled past it. (In menu-hidden mode the hero is `display: none`, so
+  the bar shows, as before.)
+- Guide bot icon: hidden while the header is in view, same as the search
+  bar. The side menu's "Guide & tour" link still opens the tour.
+- Side button: `top: max(45%, var(--header-clear) + 1rem)` — drops below
+  the header while it is in view. `updateHeaderClear()` also sets the
+  same top inline, so the rule holds in very old browsers that ignore
+  `max()`.
+- Overlays: top edge is now `var(--header-clear, 0)` instead of `inset: 0`
+  — they open below the header, the header stays visible above them.
+- Mini windows: open below the header when it is in view; cannot be
+  dragged up over it (drag top clamps at the header's bottom edge + 8px);
+  a maximised window sits below the header too, and its old top is put
+  back when un-maximised.
+- The meeting-room paragraph on the page now states the rule in plain
+  words.
+- Everything else unchanged: voice-once, search, mini browsers, meeting
+  room, transparency (10% black), frosted cards, nebula.
+
+Validation: HTML parses, divs balanced 277/277, script passes
+`node --check`, 120 local media references, none missing, zero
+"main-logo" references left in any `.html` file. Base verified in sync
+with main before editing (main's `full-federation.html` was 93,905 B, the
+pre-edit local size; the diff shows only these changes). Edited file:
+99,400 B.
+
+Pushed branch-first to Keywebco/nextxus-biz: branch
+`video-header-not-covered-2026-11-13`, commit
+`d9cba3cb99d7ea9432c8548b02f5906a112268a2`, PR #2
+(https://github.com/Keywebco/nextxus-biz/pull/2). Branch tree verified
+against local files: `full-federation.html`, report, README, `video-header.mp4`,
+`video-header.jpg` all blob-identical; `main-logo.mp4` and `main-logo.jpg`
+deleted from the branch. NOT merged: a merge needs Roger's explicit merge
+word for that named PR. No live URL claimed until verified live.

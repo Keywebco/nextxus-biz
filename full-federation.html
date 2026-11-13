@@ -11,20 +11,34 @@
      through around the cards. */
   body { margin: 0; background: #0a0a0a url("crab-nebula.jpg") center center / cover fixed no-repeat; color: #fff; font-family: Arial, Helvetica, sans-serif; font-size: 1.25rem; line-height: 1.5; }
   a { color: #f5c542; }
-  /* Video header */
-  .hero { position: relative; min-height: 520px; display: flex; align-items: flex-end; background: #000; overflow: hidden; }
-  .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  /* Video header — Roger, 2026-11-13 09:28 CST: the video at the top does
+     not get covered AT ALL. The hero text used to sit in a dark panel over
+     the bottom of the video — that panel covered the video, so the text
+     now sits BELOW the video, still inside the header, and the video is
+     fully visible, edge to edge. Reversible: put the panel back over the
+     video by restoring the old flex / absolute rules. */
+  .hero { position: relative; background: #000; overflow: hidden; }
+  .hero video { position: relative; display: block; width: 100%; height: 520px; object-fit: cover; }
   .hero-text { position: relative; background: rgba(0,0,0,0.72); margin: 2rem; padding: 2rem; max-width: 760px; }
   .hero-text h1 { font-size: 3rem; margin: 0 0 0.5rem; color: #f5c542; }
   .hero-text p { margin: 0.5rem 0; }
   button { font-size: 1.25rem; padding: 0.5rem 1rem; cursor: pointer; margin-top: 1rem; }
-  /* Floating small search bar, top right, follows scrolling */
-  .search-float { position: fixed; top: 1rem; right: 1rem; z-index: 50; background: rgba(0,0,0,0.85); border: 2px solid #f5c542; padding: 0.5rem; display: flex; gap: 0.5rem; align-items: center; }
+  /* Floating small search bar, top right, follows scrolling.
+     Roger, 2026-11-13 09:25 CST: the header does not get covered. So the
+     search bar stays hidden while the header is in view, and only appears
+     once the visitor has scrolled past the header (body.past-hero). */
+  .search-float { position: fixed; top: 1rem; right: 1rem; z-index: 50; background: rgba(0,0,0,0.85); border: 2px solid #f5c542; padding: 0.5rem; display: none; gap: 0.5rem; align-items: center; }
+  body.past-hero .search-float { display: flex; }
   .search-float input { font-size: 1.1rem; padding: 0.4rem; width: 180px; }
   .search-float button { margin: 0; font-size: 1.1rem; }
   .search-float small { display: block; color: #ccc; font-size: 0.9rem; }
   /* Little guide ("bit") icon, bottom right */
   .bit-icon { position: fixed; bottom: 1rem; right: 1rem; z-index: 50; width: 72px; height: 72px; border-radius: 50%; background: #000; border: 2px solid #f5c542; padding: 0; overflow: hidden; cursor: pointer; }
+  /* Roger, 2026-11-13 09:25 CST: the header does not get covered. On a
+     short screen the bottom-right guide bot would sit on the header's
+     bottom-right corner, so it stays hidden while the header is in view
+     and appears once the visitor has scrolled past it. */
+  body:not(.past-hero) .bit-icon { display: none; }
   .bit-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .bot-hint { display: flex; gap: 0.75rem; align-items: center; cursor: pointer; background: rgba(0,0,0,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 2px solid #f5c542; padding: 0.5rem 1rem; max-width: 640px; margin: 0 0 1rem; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
   .bot-hint img { width: 64px; height: 64px; object-fit: cover; border-radius: 50%; flex: 0 0 64px; }
@@ -64,7 +78,11 @@
      10% darkening black window with transparency for 90% of it so the text
      will show — background rgba(0,0,0,0.10), 10% black, 90% transparent.
      Text stays solid white / gold, never transparent. */
-  .overlay { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.10); padding: 2rem; overflow-y: auto; }
+  .overlay { display: none; position: fixed; left: 0; right: 0; bottom: 0; top: var(--header-clear, 0); z-index: 100; background: rgba(0,0,0,0.10); padding: 2rem; overflow-y: auto; }
+  /* Roger, 2026-11-13 09:25 CST: the header does not get covered. The
+     overlays (big search, guide and tour) start below the header — their
+     top edge is the header's bottom edge (--header-clear, set by the
+     script) — so the header stays visible above them. */
   .overlay.open { display: block; }
   .overlay .panel { background: rgba(0,0,0,0.10); border: 2px solid #f5c542; max-width: 760px; margin: 2rem auto; padding: 2rem; }
   .overlay .panel, .overlay .panel h2, .overlay .panel p, .overlay .panel li { text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
@@ -81,7 +99,11 @@
      white text with a dark shadow so it reads over whatever is behind the
      window. The gold title bar stays solid gold (the drag handle). */
   .mini-win { position: fixed; z-index: 200; background: rgba(0,0,0,0.10); border: 2px solid #f5c542; width: min(560px, 92vw); min-width: 280px; min-height: 220px; box-shadow: 0 10px 40px rgba(0,0,0,0.85); display: flex; flex-direction: column; resize: both; overflow: hidden; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
-  .mini-win.max { inset: 1rem !important; width: auto !important; height: auto !important; resize: none; }
+  /* Roger, 2026-11-13 09:25 CST: the header does not get covered. A
+     maximised window used to use inset: 1rem, which covered the header.
+     Now left / right / bottom are 1rem, and the top is set by the script
+     to sit below the header when the header is in view. */
+  .mini-win.max { left: 1rem !important; right: 1rem !important; bottom: 1rem !important; width: auto !important; height: auto !important; resize: none; }
   .mini-win.min .mini-body { display: none; }
   .mini-title { display: flex; gap: 0.5rem; align-items: center; background: #f5c542; color: #000; padding: 0.4rem 0.6rem; cursor: move; font-weight: bold; user-select: none; touch-action: none; }
   .mini-title span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -103,7 +125,11 @@
      dims the whole menu (goes invisible) and brings it back up — the menu
      comes up over whatever you are watching. When hidden, only the little
      side button and the floating search bar remain. */
-  #menu-toggle { position: fixed; left: 0; top: 45%; z-index: 60; writing-mode: vertical-rl; font-size: 1.1rem; padding: 0.75rem 0.4rem; background: rgba(0,0,0,0.85); color: #f5c542; border: 2px solid #f5c542; border-left: none; cursor: pointer; margin: 0; }
+  /* Roger, 2026-11-13 09:25 CST: the header does not get covered. The side
+     button sits at 45% down the screen, which on a tall screen is on top
+     of the header's left edge — so it drops below the header's bottom edge
+     (--header-clear) while the header is in view. */
+  #menu-toggle { position: fixed; left: 0; top: 45%; top: max(45%, calc(var(--header-clear, 0px) + 1rem)); z-index: 60; writing-mode: vertical-rl; font-size: 1.1rem; padding: 0.75rem 0.4rem; background: rgba(0,0,0,0.85); color: #f5c542; border: 2px solid #f5c542; border-left: none; cursor: pointer; margin: 0; }
   body.menu-hidden header.hero, body.menu-hidden .layout { display: none; }
   /* Customizable background. The nebula is the default (body background).
      A background video sits fixed behind everything, hidden until chosen. */
@@ -114,7 +140,7 @@
   .bg-picker button { margin: 0.5rem 0.5rem 0 0; }
   .bg-picker input[type="file"] { font-size: 1.1rem; margin: 0.5rem 0.5rem 0 0; color: #fff; }
   @media (max-width: 700px) {
-    .hero { min-height: 360px; }
+    .hero video { height: 360px; }
     .hero-text { margin: 1rem; padding: 1.25rem; }
     .hero-text h1 { font-size: 2rem; }
     .layout { flex-direction: column; }
@@ -150,13 +176,13 @@
 <button class="bit-icon" id="bit-icon" type="button" aria-label="Open the Federation guide and tour — the little blue guide bot"><img src="guide-bot.jpg" alt="Guide bot — a little blue and silver AI robot with yellow crescent eyes, AI on its chest"></button>
 
 <header class="hero">
-  <video id="fed-video" autoplay muted loop playsinline poster="main-logo.jpg">
-    <source src="main-logo.mp4" type="video/mp4">
+  <video id="fed-video" autoplay muted loop playsinline poster="video-header.jpg" aria-label="Video header">
+    <source src="video-header.mp4" type="video/mp4">
     <img src="../opening-gif-2026-11-12/opening.gif" alt="Federation Tools — gold mountain logo, with Systems, Tools, Guides and Maps">
   </video>
   <div class="hero-text">
     <h1>The Federation</h1>
-    <p>HumanCodex Nextxus Federation — next-xus.biz is the primary landing page. The video at the top is Roger's main logo video — NextXus: a hand touches a glowing cube, the cube opens into a glowing city, and the journey goes on — The Human Codex, neural networks, data streams, virtual realities. The opening video, with the four doors — Systems, Tools, Guides, Maps — is kept as a tile in Federation information below.</p>
+    <p>HumanCodex Nextxus Federation — next-xus.biz is the primary landing page. The video at the top is Roger's video header — NextXus: a hand touches a glowing cube, the cube opens into a glowing city, and the journey goes on — The Human Codex, neural networks, data streams, virtual realities. The opening video, with the four doors — Systems, Tools, Guides, Maps — is kept as a tile in Federation information below.</p>
     <p>Free, open, static, portable. No subscriptions. No tracking.</p>
     <p><strong>We become a desktop.</strong> The mini windows operate like regular pop-up windows and interfaces. The Federation is always a little bit visible behind them — just close the mini window and you&rsquo;re back on us.</p>
     <button id="hear-once" type="button">Hear it once</button>
@@ -197,7 +223,7 @@
       <p>The whole background is nothing but a menu, like Netflix — you can use it anytime. Make it yours: the nebula, a video, or your own photo. The mini browsers float over whatever is on the screen all the time.</p>
       <button type="button" data-bg="nebula">Crab Nebula (default)</button>
       <button type="button" data-bg="opening">Background video — the opening</button>
-      <button type="button" data-bg="main-logo">Background video — the main logo</button>
+      <button type="button" data-bg="video-header">Background video — the video header</button>
       <label>Load your own photo: <input type="file" id="bg-photo" accept="image/*"></label>
       <p><strong>Considered, not built:</strong> a YouTube music video playing in the background. That is an idea Roger considered — it is not built here, because YouTube embedding may be blocked, and no YouTube video has been named.</p>
     </section>
@@ -213,13 +239,13 @@
 
     <h2 id="information">Federation information</h2>
     <div class="rail">
-      <div class="tile"><div class="play-media" data-video="main-logo.mp4" data-poster="main-logo.jpg" data-title="Main logo video — NextXus" tabindex="0" role="button" aria-label="Play the main logo video — NextXus"><img src="main-logo.jpg" alt="NextXus in white letters over a dark blue glowing cube, a hand touching the cube"></div><div class="tile-text"><h3>Main logo video — NextXus</h3><p>Roger's main logo video, and the video at the top of this page. White “NextXus” text over a dark blue glowing cube, a hand touching the cube, the cube opening into a glowing city, a man in a suit manipulating holographic blue and green cubes, then the cards: “THE HUMAN CODEX — A JOURNEY INTO OUR DIGITAL SELF”, “NEURAL NETWORKS — MAPPING THE MIND'S DIGITAL FRONTIER”, “DATA STREAMS — FLOWING INFORMATION IN THE DIGITAL AGE”, “VIRTUAL REALITIES — BUILDING WORLDS BEYOND PHYSICAL LIMITS”. 30.6 s, with sound. First in the Federation information row, and the main header video.</p></div></div>
-      <div class="tile"><div class="play-media" data-video="../opening.mp4" data-poster="../opening-gif-2026-11-12/opening-header.png" data-title="The opening — four doors" tabindex="0" role="button" aria-label="Play the opening video — four doors"><img src="../opening-gif-2026-11-12/opening-header.png" alt="Federation Tools — gold mountain logo on white"></div><div class="tile-text"><h3>The opening — four doors</h3><p>The opening video that used to be the header: gold logos scrolling on white — Tools (mountains), Guides (compass), Systems (gears), Maps (map and pin). The four doors, one Federation. 10 s, with sound. Kept as a tile now that the main logo video is the header.</p></div></div>
+      <div class="tile"><div class="play-media" data-video="video-header.mp4" data-poster="video-header.jpg" data-title="Video header — NextXus" tabindex="0" role="button" aria-label="Play the Video header — NextXus"><img src="video-header.jpg" alt="NextXus in white letters over a dark blue glowing cube, a hand touching the cube"></div><div class="tile-text"><h3>Video header — NextXus</h3><p>Roger's video header, the video at the top of this page. White “NextXus” text over a dark blue glowing cube, a hand touching the cube, the cube opening into a glowing city, a man in a suit manipulating holographic blue and green cubes, then the cards: “THE HUMAN CODEX — A JOURNEY INTO OUR DIGITAL SELF”, “NEURAL NETWORKS — MAPPING THE MIND'S DIGITAL FRONTIER”, “DATA STREAMS — FLOWING INFORMATION IN THE DIGITAL AGE”, “VIRTUAL REALITIES — BUILDING WORLDS BEYOND PHYSICAL LIMITS”. 30.6 s, with sound. First in the Federation information row, and the video header.</p></div></div>
+      <div class="tile"><div class="play-media" data-video="../opening.mp4" data-poster="../opening-gif-2026-11-12/opening-header.png" data-title="The opening — four doors" tabindex="0" role="button" aria-label="Play the opening video — four doors"><img src="../opening-gif-2026-11-12/opening-header.png" alt="Federation Tools — gold mountain logo on white"></div><div class="tile-text"><h3>The opening — four doors</h3><p>The opening video that used to be the header: gold logos scrolling on white — Tools (mountains), Guides (compass), Systems (gears), Maps (map and pin). The four doors, one Federation. 10 s, with sound. Kept as a tile now that the video header is at the top.</p></div></div>
       <div class="tile"><div class="play-media" data-video="program-33.mp4" data-poster="program-33.jpg" data-title="The face of the HumanCodex — Federation Library" tabindex="0" role="button" aria-label="Play The face of the HumanCodex — Federation Library"><img src="program-33.jpg" alt="A radiant face with a maze pattern, glowing eyes, a hand holding a golden key marked IE, in a starfield"></div><div class="tile-text"><h3>The face of the HumanCodex — Federation Library</h3><p>“Welcome, seeker of truth. I am the face of the HumanCodex. NextXus Federation Library. Repository of knowledge on all topics. A majority of this library, especially with web access, is about AI. Cognitive skills, ability, and the path of verified truth. Enter freely. The truth awaits.” 15 s, with sound. First in the library row.</p></div></div>
       <div class="tile"><div class="play-media" data-video="program-27.mp4" data-poster="program-27.jpg" data-title="The gothic library" tabindex="0" role="button" aria-label="Play The gothic library"><img src="program-27.jpg" alt="Gothic library, stained glass windows, an open book on a table with a glowing lightbulb rising from it"></div><div class="tile-text"><h3>The gothic library</h3><p>A gothic library, stained glass, tall shelves and ladders, an open book on the table, a glowing lightbulb rising from it. The library, lit. 15 s, with sound.</p></div></div>
       <div class="tile"><div class="play-media" data-video="program-23.mp4" data-poster="program-23.jpg" data-title="The grand library" tabindex="0" role="button" aria-label="Play The grand library"><img src="program-23.jpg" alt="A grand library with tall bookshelves, ladders, and a glowing open book on a table"></div><div class="tile-text"><h3>The grand library</h3><p>A grand library, tall shelves and ladders, light falling on a table where a book glows open. The library of everything, in the room. 6.5 s, no sound.</p></div></div>
       <div class="tile"><div class="play-media" data-video="program-37.mp4" data-poster="program-37.jpg" data-title="The Architect's table" tabindex="0" role="button" aria-label="Play The Architect's table"><img src="program-37.jpg" alt="A dark hall, a wooden table, a scroll unrolled into a blueprint, candles burning, compasses and tools at the sides"></div><div class="tile-text"><h3>The Architect's table</h3><p>A dark hall, a wooden table, and on it a scroll that unrolls into a blueprint, candles burning, compasses and tools at the sides. The plan, laid out. 10 s, with sound.</p></div></div>
-      <div class="tile"><div class="play-media" data-video="program-49.mp4" data-poster="program-49.jpg" data-title="THE HUMAN CODEX — A JOURNEY INTO OUR DIGITAL SELF" tabindex="0" role="button" aria-label="Play THE HUMAN CODEX — A JOURNEY INTO OUR DIGITAL SELF"><img src="program-49.jpg" alt="A pink and magenta DNA helix turning against binary code, with the words THE HUMAN CODEX — A JOURNEY INTO OUR DIGITAL SELF"></div><div class="tile-text"><h3>THE HUMAN CODEX — A JOURNEY INTO OUR DIGITAL SELF</h3><p>A pink and magenta DNA helix turning against binary code, with the words “THE HUMAN CODEX — A JOURNEY INTO OUR DIGITAL SELF”. The same card as in Roger’s main logo video, here as a short clip on its own. 6 s, with sound.</p></div></div>
+      <div class="tile"><div class="play-media" data-video="program-49.mp4" data-poster="program-49.jpg" data-title="THE HUMAN CODEX — A JOURNEY INTO OUR DIGITAL SELF" tabindex="0" role="button" aria-label="Play THE HUMAN CODEX — A JOURNEY INTO OUR DIGITAL SELF"><img src="program-49.jpg" alt="A pink and magenta DNA helix turning against binary code, with the words THE HUMAN CODEX — A JOURNEY INTO OUR DIGITAL SELF"></div><div class="tile-text"><h3>THE HUMAN CODEX — A JOURNEY INTO OUR DIGITAL SELF</h3><p>A pink and magenta DNA helix turning against binary code, with the words “THE HUMAN CODEX — A JOURNEY INTO OUR DIGITAL SELF”. The same card as in Roger’s video header, here as a short clip on its own. 6 s, with sound.</p></div></div>
       <div class="tile"><div class="play-media" data-video="program-41.mp4" data-poster="program-41.jpg" data-title="The man in the library" tabindex="0" role="button" aria-label="Play The man in the library"><img src="program-41.jpg" alt="A man in a brown sweater sitting in a library armchair, bookshelves and a globe behind him"></div><div class="tile-text"><h3>The man in the library</h3><p>A man in a brown sweater, sitting in a library armchair, bookshelves and a globe behind him, speaking to the room. Who he is is not named in the frame — UNKNOWN. 10 s, with sound, vertical.</p></div></div>
       <div class="tile"><div class="play-media" data-video="program-18.mp4" data-poster="program-18.jpg" data-title="95% Truth or Silence" tabindex="0" role="button" aria-label="Play 95% Truth or Silence"><img src="program-18.jpg" alt="A blue neural web with the words 95% TRUTH OR SILENCE"></div><div class="tile-text"><h3>95% Truth or Silence</h3><p>“95% TRUTH OR SILENCE.” A blue neural web, crackling with light. The 95% Truth Gate, in one line. 15 s, with sound.</p></div></div>
       
@@ -258,7 +284,7 @@
       </div>
 
     <h2 id="meeting">Meeting room — mini browsers, side by side</h2>
-    <p>Everything is all right here — you never have to leave this page. Tap a card and a mini browser pops up: a floating window you can drag around, make larger or smaller, and keep open next to other windows, side by side. That is a meeting room, all of a sudden. Sound on or off, play the video, whatever you want to do. The windows are 100% transparent with a 10% darkening black, so the text shows over whatever is behind them. <strong>We become a desktop.</strong> The mini windows operate like regular pop-up windows and interfaces. The Federation is always a little bit visible behind them — just close the mini window and you&rsquo;re back on us. Some sites block being put inside a mini browser — if a window stays blank, tap “Open in a new tab” inside it.</p>
+    <p>Everything is all right here — you never have to leave this page. Tap a card and a mini browser pops up: a floating window you can drag around, make larger or smaller, and keep open next to other windows, side by side. That is a meeting room, all of a sudden. Sound on or off, play the video, whatever you want to do. The windows are 100% transparent with a 10% darkening black, so the text shows over whatever is behind them. <strong>We become a desktop.</strong> The mini windows operate like regular pop-up windows and interfaces. The Federation is always a little bit visible behind them — just close the mini window and you&rsquo;re back on us. The header does not get covered: windows open below the video header, and they cannot be dragged up over it — the floating search bar and the little guide bot wait until you have scrolled past the header, and the big search and the guide and tour open below it. Some sites block being put inside a mini browser — if a window stays blank, tap “Open in a new tab” inside it.</p>
     <div class="rail">
       <div class="tile"><img src="guide-bot.jpg" alt="The little blue guide bot"><div class="tile-text"><h3>ChatGPT — in a mini browser</h3><p>Talk to ChatGPT, in a mini browser on this page. Tap the button and it pops up — drag it, make it larger or smaller, keep it open next to the others.</p><button class="open-site" type="button" data-site="https://chatgpt.com" data-title="ChatGPT">Open ChatGPT in a mini browser</button><p class="mini-note">ChatGPT is on another network. Some sites block embedding — if the window stays blank, use “Open in a new tab” inside it.</p></div></div>
       <div class="tile"><img src="guide-bot.jpg" alt="The little blue guide bot"><div class="tile-text"><h3>Grok — in a mini browser</h3><p>Talk to Grok, in a mini browser on this page. Tap the button and it pops up — drag it, make it larger or smaller, keep it open next to the others.</p><button class="open-site" type="button" data-site="https://grok.com" data-title="Grok">Open Grok in a mini browser</button><p class="mini-note">Grok is on another network. Some sites block embedding — if the window stays blank, use “Open in a new tab” inside it.</p></div></div>
@@ -410,8 +436,8 @@
 </footer>
 
 <script>
-/* Interactive bits only — six small, labeled pieces. No external scripts.
-   1. Voice once, then silent. 2. Big search overlay + talk-to-text. 3. Guide and tour overlay. 4. Click-to-play tiles, now popping up larger in a mini browser. 5. Mini-browser windows — the meeting room. 6. Search that lands on the card. 7. Hide/show the menu + customizable desktop background. */
+/* Interactive bits only — small, labeled pieces. No external scripts.
+   1. Voice once, then silent. 2. Big search overlay + talk-to-text. 3. Guide and tour overlay. 4. Click-to-play tiles, now popping up larger in a mini browser. 5. Mini-browser windows — the meeting room. 6. Search that lands on the card. 7. Hide/show the menu + customizable desktop background. 8. The header does not get covered (Roger, 2026-11-13 09:25 CST). */
 (function () {
   /* 1. Voice once, then silent. Browsers block autoplay WITH sound, so the video must start muted.
      Tap "Hear it once": unmute, restart from 0, play once with sound. On 'ended': mute, loop, restart. */
@@ -430,6 +456,50 @@
     });
   }
 
+  /* 8. The header does not get covered — Roger, 2026-11-13 09:25 CST.
+     One shared rule: the header's bottom edge, in viewport pixels, is the
+     line nothing may cross. heroClear() is that edge while the header is
+     in view (0 once it has scrolled away, or when the menu hides it).
+     updateHeaderClear() writes it into --header-clear (the overlays and
+     the side button read it in CSS) and marks body.past-hero, which shows
+     the floating search bar and the guide bot only once the visitor has
+     scrolled past the header. enforceWindowsBelowHeader() pushes any open
+     mini-browser window down below the header if a scroll brings the
+     header back into view over it. The hero text panel is part of the
+     header itself, not a cover — it is left exactly as it is. */
+  var heroEl = document.querySelector('header.hero');
+  function heroClear() {
+    if (!heroEl) return 0;
+    var r = heroEl.getBoundingClientRect();
+    return (r.height > 0 && r.bottom > 0) ? Math.ceil(r.bottom) : 0;
+  }
+  function minWinTop() {
+    var c = heroClear();
+    return c > 0 ? c + 8 : 0;
+  }
+  function updateHeaderClear() {
+    var c = heroClear();
+    document.documentElement.style.setProperty('--header-clear', c + 'px');
+    document.body.classList.toggle('past-hero', c === 0);
+    /* The side button's CSS uses max(), which very old browsers ignore
+       (falling back to 45%, on top of the header). The inline top here
+       holds the same rule for every browser. */
+    var mt = document.getElementById('menu-toggle');
+    if (mt) mt.style.top = c > 0 ? (c + 16) + 'px' : '';
+  }
+  function enforceWindowsBelowHeader() {
+    updateHeaderClear();
+    var floor = minWinTop();
+    var wins = document.querySelectorAll('.mini-win');
+    for (var wi = 0; wi < wins.length; wi++) {
+      var top = wins[wi].getBoundingClientRect().top;
+      if (top < floor) wins[wi].style.top = floor + 'px';
+    }
+  }
+  updateHeaderClear();
+  window.addEventListener('scroll', enforceWindowsBelowHeader, { passive: true });
+  window.addEventListener('resize', enforceWindowsBelowHeader);
+
   /* 2. Big search overlay. Tapping the small floating search box opens the big one.
      Talk-to-text: the browser's built-in speech recognition only, if it exists. Otherwise text only. */
   var miniInput = document.querySelector('#mini-search input[name="q"]');
@@ -439,6 +509,7 @@
   var talkBtn = document.getElementById('talk-btn');
   var talkNote = document.getElementById('talk-note');
   function openSearch() {
+    updateHeaderClear(); /* the overlay starts below the header — see piece 8 */
     if (bigOverlay) bigOverlay.classList.add('open');
     if (bigQ) bigQ.focus();
   }
@@ -446,7 +517,7 @@
   var sideSearch = document.getElementById('side-search');
   if (sideSearch) sideSearch.addEventListener('click', function (e) { e.preventDefault(); openSearch(); });
   var sideTour = document.getElementById('side-tour');
-  if (sideTour) sideTour.addEventListener('click', function (e) { e.preventDefault(); var t = document.getElementById('tour'); if (t) t.classList.add('open'); });
+  if (sideTour) sideTour.addEventListener('click', function (e) { e.preventDefault(); updateHeaderClear(); var t = document.getElementById('tour'); if (t) t.classList.add('open'); });
   if (closeSearch) closeSearch.addEventListener('click', function () { if (bigOverlay) bigOverlay.classList.remove('open'); });
   if (talkBtn) {
     talkBtn.addEventListener('click', function () {
@@ -479,13 +550,13 @@
   var bitIcon = document.getElementById('bit-icon');
   var tourOverlay = document.getElementById('tour');
   var closeTour = document.getElementById('close-tour');
-  if (bitIcon && tourOverlay) bitIcon.addEventListener('click', function () { tourOverlay.classList.add('open'); });
+  if (bitIcon && tourOverlay) bitIcon.addEventListener('click', function () { updateHeaderClear(); tourOverlay.classList.add('open'); });
   if (closeTour && tourOverlay) closeTour.addEventListener('click', function () { tourOverlay.classList.remove('open'); });
   /* 3b. Contextual robot hints. On the AI, Tools and Guides rows, a small robot hint says "Ask me about this" — tapping it opens the guide and tour, same as the little bot. Contextual only, not on every tile. Proposed behavior. */
   var hints = document.querySelectorAll('.bot-hint');
   for (var hi = 0; hi < hints.length; hi++) {
     (function (el) {
-      el.addEventListener('click', function () { if (tourOverlay) tourOverlay.classList.add('open'); });
+      el.addEventListener('click', function () { updateHeaderClear(); if (tourOverlay) tourOverlay.classList.add('open'); });
       el.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && tourOverlay) { e.preventDefault(); tourOverlay.classList.add('open'); } });
     })(hints[hi]);
   }
@@ -514,7 +585,9 @@
     win.setAttribute('role', 'dialog');
     win.setAttribute('aria-label', title);
     var left = 24 + ((winCount - 1) % 5) * 48;
-    var top = 24 + ((winCount - 1) % 5) * 40;
+    /* Roger, 2026-11-13 09:25 CST: the header does not get covered. A new
+       window opens below the header when the header is in view. */
+    var top = Math.max(24, minWinTop()) + ((winCount - 1) % 5) * 40;
     win.style.left = left + 'px';
     win.style.top = top + 'px';
     win.style.zIndex = ++topZ;
@@ -536,7 +609,19 @@
     document.body.appendChild(win);
     closeBtn.addEventListener('click', function () { win.remove(); });
     minBtn.addEventListener('click', function () { win.classList.toggle('min'); });
-    maxBtn.addEventListener('click', function () { win.classList.toggle('max'); });
+    /* Roger, 2026-11-13 09:25 CST: the header does not get covered. A
+       maximised window sits below the header when the header is in view;
+       its old top is kept and put back when it is un-maximised. */
+    maxBtn.addEventListener('click', function () {
+      if (win.classList.contains('max')) {
+        win.classList.remove('max');
+        win.style.top = win.dataset.prevTop || '24px';
+      } else {
+        win.dataset.prevTop = win.style.top;
+        win.classList.add('max');
+        win.style.top = Math.max(16, minWinTop()) + 'px';
+      }
+    });
     win.addEventListener('mousedown', function () { win.style.zIndex = ++topZ; });
     /* Drag by the title bar. Pointer events, so it works with a mouse and with touch. */
     bar.addEventListener('pointerdown', function (e) {
@@ -546,7 +631,10 @@
       var r = win.getBoundingClientRect();
       var ox = sx - r.left, oy = sy - r.top;
       bar.setPointerCapture(e.pointerId);
-      function move(ev) { win.style.left = Math.max(0, ev.clientX - ox) + 'px'; win.style.top = Math.max(0, ev.clientY - oy) + 'px'; }
+      /* Roger, 2026-11-13 09:25 CST: the header does not get covered. A
+         window cannot be dragged up over the header — its top edge stops
+         at the header's bottom edge while the header is in view. */
+      function move(ev) { win.style.left = Math.max(0, ev.clientX - ox) + 'px'; win.style.top = Math.max(minWinTop(), ev.clientY - oy) + 'px'; }
       function up() { bar.removeEventListener('pointermove', move); bar.removeEventListener('pointerup', up); }
       bar.addEventListener('pointermove', move);
       bar.addEventListener('pointerup', up);
@@ -759,7 +847,7 @@
      down, dims, becomes invisible; bring it up and the menu comes up over
      whatever you are watching. When hidden, only this side button and the
      floating search bar remain. The background picker: Crab Nebula (default),
-     a background video (the opening, or the main logo video, both local
+     a background video (the opening, or the video header, both local
      files already in the folder), or your own photo (a file input — local
      only, the file is read in the browser and never uploaded anywhere). */
   var menuToggle = document.getElementById('menu-toggle');
@@ -768,6 +856,7 @@
       var hidden = document.body.classList.toggle('menu-hidden');
       menuToggle.textContent = hidden ? '\u2630 Show menu' : '\u2630 Hide menu';
       menuToggle.setAttribute('aria-label', hidden ? 'Show the Federation menu' : 'Hide the Federation menu — tap again to bring it back');
+      updateHeaderClear(); /* hiding the menu hides the header too — see piece 8 */
     });
   }
   var bgVideo = document.getElementById('bg-video');
@@ -787,7 +876,7 @@
         var kind = btn.getAttribute('data-bg');
         if (kind === 'nebula') { setBgVideo(''); document.body.style.backgroundImage = ''; }
         else if (kind === 'opening') { setBgVideo('../opening.mp4'); }
-        else if (kind === 'main-logo') { setBgVideo('main-logo.mp4'); }
+        else if (kind === 'video-header') { setBgVideo('video-header.mp4'); }
       });
     })(bgBtns[bi]);
   }

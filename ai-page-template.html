@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><!-- NAME --> — Federation</title>
+<style>
+  /*
+   * PER-AI / PER-BUSINESS PAGE TEMPLATE — 2026-11-12, Roger's design.
+   * Draft, not live. Plain HTML, no tracking, no external scripts.
+   *
+   * HOW TO USE IT — change only the :root variables and the marked
+   * sections, and you have a new page:
+   *   --face:   the face picture / video poster for this AI or business.
+   *             For a business, this is their logo.
+   *   --accent: this business's / AI's colors (accent). Default gold.
+   *   --bg:     the background image. For a business, their business
+   *             colors and their logo are the background instead of a
+   *             nebula. For an AI, the background is theirs — their
+   *             face picture, or their video.
+   * Everything is transparent, everything is overlaid: frosted cards
+   * over the background, light text, so the face / logo still shows
+   * through behind the cards.
+   */
+  :root {
+    --face: program-43.jpg;          /* CHANGE: face picture / video poster */
+    --face-video: program-43.mp4;    /* CHANGE: face video, if there is one */
+    --bg: program-43.jpg;            /* CHANGE: background — face, logo, or nebula */
+    --accent: #f5c542;               /* CHANGE: business colors / AI accent */
+    --frost: rgba(0,0,0,0.55);       /* gray / black frosting over the background */
+  }
+  body { margin: 0; background: #0a0a0a url("crab-nebula.jpg") center center / cover fixed no-repeat; color: #fff; font-family: Arial, Helvetica, sans-serif; font-size: 1.25rem; line-height: 1.5; }
+  body.has-bg { background-image: var(--bg); }
+  a { color: var(--accent); }
+  h1, h2, h3 { color: var(--accent); text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
+  p, li { text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
+
+  /* Narrow menu that goes all the way down the site */
+  .layout { display: flex; align-items: stretch; }
+  nav.side { flex: 0 0 180px; padding: 1rem 0.75rem; position: sticky; top: 0; align-self: flex-start; height: 100vh; box-sizing: border-box; background: var(--frost); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  nav.side ul { list-style: none; margin: 0; padding: 0; }
+  nav.side li { margin: 0.6rem 0; }
+  nav.side a { font-size: 1.15rem; }
+  main { flex: 1; padding: 1rem 1.5rem 3rem; min-width: 0; }
+
+  /* Face / video at the top — the hero */
+  .hero { position: relative; min-height: 520px; display: flex; align-items: flex-end; overflow: hidden; border: 2px solid var(--accent); }
+  .hero img, .hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero-text { position: relative; background: var(--frost); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); margin: 2rem; padding: 2rem; max-width: 760px; }
+  .hero-text h1 { font-size: 3rem; margin: 0 0 0.5rem; }
+
+  /* Halfway down: a line of three videos, horizontally across */
+  .three { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; }
+  .three .tile { flex: 1 1 0; min-width: 260px; background: var(--frost); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 2px solid #333; }
+  .tile video, .tile img { width: 100%; height: 200px; object-fit: cover; display: block; background: #000; }
+  .tile-text { padding: 1rem; }
+  .tile h3 { font-size: 1.4rem; margin: 0 0 0.5rem; }
+  .tile p { margin: 0.5rem 0; font-size: 1.15rem; color: #f2f2f2; }
+
+  /* Then: the database, or a huge video, or text like logs.
+     Two columns of logs on the LEFT side. */
+  .database { display: flex; gap: 1rem; align-items: flex-start; }
+  .logs { flex: 0 0 480px; display: flex; gap: 1rem; }
+  .logs .col { flex: 1 1 0; background: var(--frost); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 2px solid #333; padding: 1rem; }
+  .logs h3 { margin-top: 0; }
+  .huge { flex: 1; min-width: 0; background: var(--frost); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 2px solid var(--accent); padding: 1rem; }
+  .huge video, .huge img { width: 100%; max-height: 70vh; object-fit: contain; background: #000; display: block; }
+  .note { background: var(--frost); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-left: 6px solid var(--accent); padding: 1rem 1.5rem; margin-top: 2rem; }
+  footer { padding: 2rem; color: #aaa; font-size: 1.1rem; }
+  @media (max-width: 900px) {
+    .layout { flex-direction: column; }
+    nav.side { flex: none; position: static; height: auto; }
+    .database { flex-direction: column; }
+    .logs { flex: none; width: 100%; }
+    .three { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="side">
+    <h2><!-- NAME --></h2>
+    <ul>
+      <li><a href="#top">Face</a></li>
+      <li><a href="#videos">Three videos</a></li>
+      <li><a href="#database">Database / logs</a></li>
+      <li><a href="full-federation.html">Back to the Federation</a></li>
+    </ul>
+    <p><a href="full-federation.html">← The Federation, next-xus.biz</a></p>
+  </nav>
+  <main>
+    <!-- Face / video at the top -->
+    <section class="hero" id="top">
+      <video autoplay muted loop playsinline poster="program-43.jpg" src="program-43.mp4"></video>
+      <div class="hero-text">
+        <h1><!-- NAME --></h1>
+        <p><!-- One-line description. Everything transparent, everything overlaid. --></p>
+      </div>
+    </section>
+
+    <!-- Halfway down: a line of three videos, horizontally across -->
+    <h2 id="videos">Three videos</h2>
+    <div class="three">
+      <div class="tile"><video controls muted loop playsinline poster="program-42.jpg" src="program-42.mp4"></video><div class="tile-text"><h3>Video 1</h3><p>Brief description.</p></div></div>
+      <div class="tile"><video controls muted loop playsinline poster="program-43.jpg" src="program-43.mp4"></video><div class="tile-text"><h3>Video 2</h3><p>Brief description.</p></div></div>
+      <div class="tile"><video controls muted loop playsinline poster="program-44.jpg" src="program-44.mp4"></video><div class="tile-text"><h3>Video 3</h3><p>Brief description.</p></div></div>
+    </div>
+
+    <!-- Then: the database, or a huge video, or text like logs -->
+    <h2 id="database">The database</h2>
+    <div class="database">
+      <div class="logs">
+        <div class="col"><h3>Logs — 1</h3><p>Text like logs. First column.</p></div>
+        <div class="col"><h3>Logs — 2</h3><p>Text like logs. Second column.</p></div>
+      </div>
+      <div class="huge">
+        <video controls muted loop playsinline poster="program-44.jpg" src="program-44.mp4"></video>
+        <h3>The huge video</h3>
+        <p>Or the database, or text. A huge video, or text like logs, here.</p>
+      </div>
+    </div>
+
+    <div class="note"><p><strong>Draft, not live.</strong> Template, 2026-11-12. Change the :root variables and the marked sections for a new AI or a new business.</p></div>
+  </main>
+</div>
+<footer><p>The Federation — HumanCodex Nextxus Federation. Draft page, not live.</p></footer>
+</body>
+</html>

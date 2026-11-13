@@ -174,9 +174,7 @@ untouched here — fixing v1's paths is a separate decision for Roger.
 
 ## PR
 
-- Branch `federation-desktop-v2-2026-11-13` → `main`, PR number in the
-  delivery message. **Not merged — merge only on Roger's word for that
-  named PR.**
+- **PR #3:** https://github.com/Keywebco/nextxus-biz/pull/3 — "Federation desktop v2: a desktop, not a video library", branch `federation-desktop-v2-2026-11-13` → `main`, commit `3bd02a82…`, open, mergeable: true, not merged. Branch blobs verified identical to local files; v1 `full-federation.html` untouched on the branch (same SHA as main, `1bf8dc72…`).
 - PR #2 (v1 header fix, branch `video-header-not-covered-2026-11-13`) is
   **superseded by this v2 direction**. Left open, not merged. Its rule —
   the video at the top does not get covered at all — is built into v2.
@@ -187,3 +185,39 @@ untouched here — fixing v1's paths is a separate decision for Roger.
 Roger gives the merge word for the named PR — e.g. "Merge the
 next-xus.biz PR #N". Then: merge, verify live on next-xus.biz (desktop
 and phone), report back. A live phone check is still owed either way.
+
+## Merge + live verification — 2026-11-13 09:57 CST
+
+- Roger's merge word, 2026-11-13 09:56 CST: "Merge and proceed" — for the named PR #3 just presented to him.
+- PR #3 re-checked before merging: open, merged false, mergeable true, mergeable_state clean. Head `federation-desktop-v2-2026-11-13` `3bd02a82…`, base main `54aa53fc…`.
+- **Merged with a standard merge commit: `577948b81dd977262f95a0bb35d83f3de5cc5fcf`.** Main ref verified = merge commit. PR #2 left open, not merged.
+- `full-federation-v2.html` on main: 80,884 B, blob sha `f33f43e0c906e8c1a4e5acdc553727615c0dcbd2`, byte-identical to the local file (the report's earlier "80,198 B" was stale).
+- Live over HTTP (https for next-xus.biz still broken — certificate not issued):
+  - `http://next-xus.biz/full-federation-v2.html` — first check 404 (Pages build still running after the merge), after ~60 s **HTTP 200, 80,884 B**, title "The Federation — Desktop — next-xus.biz". Served file hash matches the main blob exactly (md5 `bf6ff35d8b081d4938d5be4e6dd4af16`).
+  - Served-file checks: 15 categories, 205 tiles parsed from the page's own data (Programs 50, Tools 51, AI 22, Timeline 15, Information 14, Throne 10, Business 9, Systems 8, Meeting 5, Seals 4, Guides 2, Maps 2, Long 2, Books 2, Roger 9); inline script passes `node --check`; dock present (`id="dock"`, 58 px, fixed bottom); `@media (max-width:640px)` with 112 px tiles; `overflow-x:hidden` on the body; mini windows `min(340px, 94vw)`; row loop via duplicated track + scrollLeft wrap; 65 external URLs, all on record.
+  - Live media spot checks: crab-nebula.jpg 200 (342,975 B), opening.mp4 200 (1,866,876 B), ring-of-12-seal.mp4 200 (1,761,657 B), program-01.mp4 200 (2,572,665 B).
+
+### Header files were missing on main — fixed, reported plainly
+
+- The merged v2 page references `video-header.mp4` / `video-header.jpg` — the name Roger chose 2026-11-13 09:29 CST — but that rename lived only in PR #2, which was superseded and never merged. Main still had only `main-logo.mp4` / `main-logo.jpg`, so the v2 header video and poster **404'd live** after the merge.
+- Fix: commit `d6bd8679fe1eee0c37bb1f89e900a7d3afb28c25` added ONLY those two files to main, byte-identical to the main-logo files already on main (md5 `bc76fcb6c2d2a6b1ba0c5bd504d62554` / `c0f191c28ac9e3965ea643162d9b38e5`). PR #2 was NOT merged. No other file touched. Reversible by a delete commit. Live re-check after the Pages rebuild: video-header.mp4 **HTTP 200, 5,874,929 B**; video-header.jpg **HTTP 200, 24,328 B**.
+- The four "missing media" hits from the local check (`opening.mp4`, `opening-gif-2026-11-12/opening.gif`, `opening-header.png`, `opening-header.gif`) are at repo root, not in the local subfolder — v2 uses root paths, so they resolve live (verified 200 above and via the contents API).
+
+### Still owed — live rendered check
+
+- The checks above are served-file and HTTP checks. **No live browser render was available to this merge task**, so the desktop-viewport and phone-viewport visual check (does it look like a desktop, do the rows loop, do tiles fit on a phone, does the bottom dock show, does the video header stay uncovered) is still owed — it needs the parent agent's live browser task, or Roger opening it on his phone: http://next-xus.biz/full-federation-v2.html
+- HTTPS for next-xus.biz is still broken (certificate not issued); the http links above are the way to open it for now.
+- v1 bug from the build report still open: v1's `full-federation.html` references `../opening.mp4` etc., which do not resolve from the repo root on GitHub Pages — some v1 tiles are broken live. v1 untouched here; fixing its paths is a separate decision for Roger.
+
+## Fix — double-open bug, 2026-11-13 10:02–10:07 CST live check
+
+- Found by a live desktop browser check: tapping a tile's "Open ↗" button opened the mini browser TWICE — two stacked offset copies of the same mini browser, and two copies of the "Get it / buy it" pop-up.
+- Cause: every tile had TWO click handlers. `buildAll` called `makeLoop(rail)` first, whose `ensure()` wired every tile with a click handler; then `buildAll` attached a second, unguarded click handler (and keydown handler) to every tile. One tap called `openTile` twice. Keyboard Enter/Space double-fired the same way. The nested `<button class="open">` inside the `<article role="button">` tile was also invalid HTML, and its `stopPropagation()` branch was a no-op (it ran inside the tile's own listener).
+- Fix, in the generator sources (`v2_script.js`, `v2_template.html`), rebuilt with `build_v2.py`:
+  - One `wireTile(el)` helper attaches the click + keydown handlers once, guarded by a JS property on the element (`el._wired`), NOT a data attribute — `makeLoop` duplicates rails with `innerHTML`, which destroys old tile elements and their listeners; a data attribute would survive the copy and wrongly mark fresh, unwired tiles as wired. A property dies with the element, so duplicated tiles get wired and existing tiles never twice. This also fixes a latent bug: a resize-triggered duplication used to create tiles the old `dataset.wired` guard skipped, leaving them dead.
+  - Both wiring sites (`buildAll` and `makeLoop.ensure()`) now call `wireTile` and nothing else.
+  - The "Open ↗" label is now a `<span class="open">`, not a nested button — the tile itself is the button (`role="button"`, `tabindex="0"`). CSS `.tile .open` gained `display:block;text-align:center` so the label looks exactly as before.
+  - Maximise fix (small change, done): the buy pop-up used to sit behind a maximised window (window z-index beats the pop-up's 121). On Maximise the pop-up is now pinned to the top-right corner below the header, above the window, and put back beside the window on restore. Bringing a window to the front (pointerdown) raises its buy pop-up with it.
+- Verification (branch file, before PR): HTML parses, no errors, divs balanced; script passes `node --check`; exactly one `wireTile` definition; both `.tile` query sites route to it; `openTile(findTile` appears exactly twice, both inside `wireTile`; zero nested `button.open`, zero `dataset.wired`, zero `stopPropagation`; diff against main's blob shows ONLY the fix lines; 15 categories, 205 tiles unchanged; no other tile behaviour changed. Base verified in sync with main before editing (local `git hash-object` = main blob `f33f43e0…`, 80,884 B).
+- Still owed: a live browser re-check of the fix after merge (one tap = one mini browser + one buy pop-up, on desktop and phone). No live browser was available to this fix task.
+- Bottom dock note (observed in the same live check, NOT changed): the fixed dock covers the bottom edge of content scrolling under it at the very bottom of the screen. The page already has `padding-bottom:78px` on the body against a 58 px dock (20 px clearance at the document end), so this is content passing under the fixed dock while scrolling, which is inherent to a fixed dock. Left as is for Roger's call — no padding change made, since it would not change the scrolling-under behaviour.

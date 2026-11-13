@@ -854,6 +854,11 @@ with main before editing (main's `full-federation.html` was 93,905 B, the
 pre-edit local size; the diff shows only these changes). Edited file:
 99,400 B.
 
-To be pushed branch-first to Keywebco/nextxus-biz — PR number in the
-handoff. NOT merged: a merge needs Roger's explicit merge word for that
-named PR. No live URL claimed until verified live.
+Pushed branch-first to Keywebco/nextxus-biz: branch
+`video-header-not-covered-2026-11-13`, commit
+`d9cba3cb99d7ea9432c8548b02f5906a112268a2`, PR #2
+(https://github.com/Keywebco/nextxus-biz/pull/2). Branch tree verified
+against local files: `full-federation.html`, report, README, `video-header.mp4`,
+`video-header.jpg` all blob-identical; `main-logo.mp4` and `main-logo.jpg`
+deleted from the branch. NOT merged: a merge needs Roger's explicit merge
+word for that named PR. No live URL claimed until verified live.

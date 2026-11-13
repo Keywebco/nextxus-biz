@@ -13,7 +13,8 @@ is live on next-xus.biz yet.** GitHub Pages / DNS wiring has not been done.
 ## What is in this repo
 
 - `full-federation.html` — the full Federation Netflix interface: 96 tiles,
-  14 rows, 60 click-to-play videos. Video header (the main logo video),
+  14 rows, 60 click-to-play videos. Video header (`video-header.mp4`,
+  Roger's main logo video, renamed 2026-11-13 on his word "Video header"),
   floating Google search (25 Federation sites), guide-and-tour bot,
   meeting room with mini-browser windows (ChatGPT, Grok, video call),
   Crab Nebula background, frosted cards, light text.
@@ -29,7 +30,8 @@ is live on next-xus.biz yet.** GitHub Pages / DNS wiring has not been done.
   including the three Echo renders (42 in space, 43 the vision, 44 gear
   halo), the 200 Year Legacy Package (program-34, split at ~10 s,
   `legacy-package-part2.mp4`), the guide bot (slow 0.75× and fast
-  original), the seals, the main logo video (`main-logo.mp4`), the book
+  original), the seals, the video header (`video-header.mp4`, was
+  `main-logo.mp4`, renamed 2026-11-13), the book
   covers, and the Crab Nebula (`crab-nebula.jpg`, verified JWST image).
 - Reports: `FULL-FEDERATION-REPORT-2026-11-12.md` (the full build log),
   `MERGE-PLAN-2026-11-12.md`, `ECHO-VISION-2026-11-12.md`,

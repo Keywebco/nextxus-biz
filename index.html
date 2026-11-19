@@ -58,8 +58,8 @@
 <body>
 
 <header class="hero">
-  <video autoplay muted loop playsinline poster="../opening-gif-2026-11-12/opening-header.png">
-    <source src="../opening-gif-2026-11-12/opening-silent.mp4" type="video/mp4">
+  <video autoplay muted loop playsinline poster="opening-gif-2026-11-12/opening-header.png">
+    <source src="opening-gif-2026-11-12/opening-silent.mp4" type="video/mp4">
   </video>
   <div class="hero-text">
     <h1>Federation Systems</h1>
@@ -82,19 +82,60 @@
       <h3>Federation Guides</h3>
       <p class="domain">next-xus.info</p>
       <p>Guides are information. How to do it.</p>
-      <p>Site not built yet.</p>
+      <p><a href="https://next-xus.info/">Open Guides &rarr;</a></p>
     </div>
     <div class="card">
       <h3>Federation Maps</h3>
       <p class="domain">next-xus.org</p>
       <p>Maps show where. The organization.</p>
-      <p>Site not built yet.</p>
+      <p><a href="https://next-xus.org/">Open Maps &rarr;</a></p>
     </div>
     <div class="card">
       <h3>Federation Systems</h3>
       <p class="domain">next-xus.biz — this site</p>
       <p>Systems is the whole house. The business running the Federation.</p>
       <p>You are here.</p>
+    </div>
+  </div>
+
+
+  <h2>The business — products for sale</h2>
+  <p>Gumroad holds all sale and purchase. Every product below is sold through Gumroad.</p>
+  <p><a href="https://keywebster.gumroad.com/">Open the Gumroad storefront &rarr;</a></p>
+  <div class="row">
+    <div class="card">
+      <h3>Paid courses</h3>
+      <p><a href="https://keywebster.gumroad.com/l/vjblsj">Project Management Professional (PMP) — $299</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/nlqsj">Certified Data Analyst with Python and SQL — $349</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/yifuu">Advanced Federation AI Systems — $399</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/ihcht">Self-Growing AI Systems — $459</a></p>
+    </div>
+    <div class="card">
+      <h3>Memberships</h3>
+      <p><a href="https://keywebster.gumroad.com/l/ophtywm">Federation Entry: The Inner Ring — $10/month</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/dqyabh">The Scholar's Ledger: Advanced Ring Access — $20/month</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/xctpus">The Architect's Covenant: 200-Year Legacy Pass — $550 / 6 months</a></p>
+    </div>
+    <div class="card">
+      <h3>SIM engines</h3>
+      <p><a href="https://keywebster.gumroad.com/l/macgch">NextXus SIM Engine: Legacy Core — $499</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/fmref">NextXus SIM Engine: Midgo Specialist — $149</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/pindmd">NextXus SIM Engine: General — $49</a></p>
+    </div>
+    <div class="card">
+      <h3>Tokens</h3>
+      <p><a href="https://keywebster.gumroad.com/l/mimet">1 NextXus Token — $5</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/mpihoy">NextXus Verification Token — $9</a></p>
+    </div>
+    <div class="card">
+      <h3>Books — 21 editions</h3>
+      <p>The full book catalog is on Gumroad.</p>
+      <p><a href="https://keywebster.gumroad.com/">Browse the books &rarr;</a></p>
+    </div>
+    <div class="card">
+      <h3>The Federation desktop</h3>
+      <p>The whole Federation as a Netflix-style desktop, with mini-browser windows.</p>
+      <p><a href="full-federation.html">Open the desktop &rarr;</a></p>
     </div>
   </div>
 
@@ -155,7 +196,7 @@
   </div>
 
   <div class="note">
-    <p><strong>Draft, not live.</strong> This page is a draft for next-xus.biz. The Guides, Maps, and Systems sites do not exist yet as live sites. next-xus.com is held still at PDR Ltd., and is not used as a door.</p>
+    <p><strong>Live.</strong> All four doors are live — Tools, Guides, Maps, Systems — and the business below is sold through Gumroad. next-xus.com is held still at PDR Ltd., and is not used as a door.</p>
   </div>
 </main>
 
@@ -197,12 +238,10 @@
 <script>
 /* Guide bot toggle + chat — Roger, 2026-11-13 11:51 CST: the bot is a mini
    Federation, a full AI chat. The chat tries the live Roger Sim endpoint
-   first (POST https://roger-sim-api.onrender.com/proxy/chat). That API
-   returns no Access-Control-Allow-Origin header (verified 2026-11-13), so
-   a browser page cannot call it directly yet — until CORS is enabled on
-   roger-sim-api (or a small proxy is added), the call fails and the chat
-   says so plainly and answers from this page's own links plus the
-   Federation search. NEVER fake a live answer. */
+   first (POST https://roger-sim-api.onrender.com/proxy/chat). CORS was enabled on roger-sim-api 2026-11-16 (allowlist includes
+   next-xus.biz), so a browser page calls the live Sim directly. If the
+   call fails, the chat says so plainly and answers from this page's own
+   links plus the Federation search. NEVER fake a live answer. */
 (function () {
   var btn = document.getElementById('guide-bot-btn');
   var panel = document.getElementById('guide-bot-panel');

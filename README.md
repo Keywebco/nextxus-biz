@@ -18,6 +18,16 @@ is live on next-xus.biz yet.** GitHub Pages / DNS wiring has not been done.
   floating Google search (25 Federation sites), guide-and-tour bot,
   meeting room with mini-browser windows (ChatGPT, Grok, video call),
   Crab Nebula background, frosted cards, light text.
+- `full-federation-v2.html` — Federation desktop v2 (2026-11-13): the
+  rebuild after Roger saw v1 on mobile and called it useless. A desktop,
+  not a video library — fixed nebula, no side menu, no wide menu under the
+  header, welcome + sign-up box first, then a category box per category,
+  then a horizontal informational line (tap a card to go to its row), then
+  the linkage rows: small uniform tiles, looping, 15 categories, 205 tiles.
+  Every tile opens in a mini browser with an attached buy/get-it pop-up.
+  Bottom dock with Home, Search, Guide, Menu, Background, Close all.
+  See `FEDERATION-DESKTOP-V2-REPORT-2026-11-13.md`. Branch-first PR, not
+  merged; PR #2 (the v1 header fix) is superseded by v2 and left open.
 - `index.html` — the .biz Netflix / throne draft (5,327 B).
 - `primary-landing.html` — the primary landing page draft (four windows).
 - `ai-page-template.html` — per-AI / per-business page template (business

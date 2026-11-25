@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Federation chat — the Federation's own AI</title>
+<!--
+  Federation chat — embeddable, standalone. Roger, 2026-11-13 11:55 CST:
+  the .biz landing page is the complete inventory, and the chatbot at the
+  bottom is actually a chatbot — the Federation's own AI, not a fabrication
+  or simulation. Any site owner can paste the iframe below into their own
+  page and they have the Federation within them.
+
+  Copy-paste snippet (canonical https form; http works today because the
+  next-xus.biz certificate is still being issued):
+    <iframe src="https://next-xus.biz/chat-embed.html" title="Federation chat — the Federation's own AI" style="position:fixed;right:0;bottom:0;width:400px;height:620px;max-width:100vw;max-height:100vh;border:0;background:transparent;z-index:9999;"></iframe>
+  The iframe reserves a 400x620 corner of the host page (transparent — only
+  the little circle shows until it is tapped). If the host page is plain
+  http, use http://next-xus.biz/chat-embed.html instead until the certificate
+  is issued.
+
+  Provenance: the chat code is the PR #6 follow-up (commit 4a353bc6, the same
+  full AI chat added to the four .biz landing pages); the mini-browser window
+  is the pattern from full-federation-v2.html (gold title bar, drag by the
+  bar, minimise / maximise / close, resize handle). Nothing invented here.
+
+  Live-answer rule: the chat tries the live Roger Sim endpoint first (POST
+  https://roger-sim-api.onrender.com/proxy/chat). That API returns no
+  Access-Control-Allow-Origin header (verified 2026-11-13), so a browser page
+  cannot call it directly yet — until CORS is enabled on roger-sim-api (or a
+  small proxy is added), the call fails and the chat says so plainly and
+  answers from the Federation's own pages below plus the Federation search.
+  NEVER fake a live answer; the fallback is never presented as the Sim
+  speaking. Next step (server change, not a page change): enable CORS on
+  roger-sim-api.
+-->
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; height: 100%; overflow: hidden; font-family: Arial, Helvetica, sans-serif; }
+
+  /* The little circle — the same guide bot as on every Federation site. */
+  .guide-bot-btn { position: fixed; bottom: 1rem; right: 1rem; z-index: 50; width: 64px; height: 64px; border-radius: 50%; background: #000; border: 2px solid #f5c542; padding: 0; overflow: hidden; cursor: pointer; }
+  .guide-bot-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* Mini browser — same pattern as full-federation-v2.html. */
+  .mini-win { position: fixed; right: 16px; bottom: 92px; width: min(340px, 94vw); height: 440px; z-index: 120; display: none; flex-direction: column; background: rgba(10, 10, 10, .97); border: 2px solid #f5c542; border-radius: 8px; box-shadow: 0 8px 30px rgba(0, 0, 0, .6); color: #fff; font-size: 1rem; line-height: 1.45; box-sizing: border-box; }
+  .mini-win.open { display: flex; }
+  .mini-win .bar { flex: 0 0 auto; display: flex; align-items: center; gap: .3rem; background: #f5c542; color: #111; font-weight: 700; padding: .35rem .5rem; cursor: move; touch-action: none; }
+  .mini-win .bar .t { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: .95rem; }
+  .mini-win .bar button { background: none; border: 0; font-size: 1.05rem; font-weight: 700; cursor: pointer; padding: .1rem .4rem; color: #111; }
+  .mini-win .body { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: .6rem .7rem; overflow-y: auto; }
+  .mini-win .body p { margin: .4rem 0; }
+  .mini-win .body h3 { font-size: 1.05rem; margin: .7rem 0 .25rem; color: #f5c542; }
+  .mini-win .body ul { margin: .25rem 0 .5rem; padding-left: 1.25rem; }
+  .mini-win .body li { margin: .25rem 0; }
+  .mini-win .body a { color: #00d4ff; }
+  .mini-win .resize { position: absolute; right: 0; bottom: 0; width: 22px; height: 22px; cursor: nwse-resize; z-index: 3; }
+  .mini-win.minimised { height: 38px; }
+  .mini-win.minimised .body, .mini-win.minimised .resize { display: none; }
+
+  /* Chat — same as the PR #6 follow-up (commit 4a353bc6). */
+  .guide-chat-log { flex: 1; min-height: 120px; overflow-y: auto; background: rgba(255, 255, 255, .06); border: 1px solid #f5c542; padding: .5rem; margin: .5rem 0; }
+  .guide-chat-msg { margin: .4rem 0; word-wrap: break-word; }
+  .guide-chat-user { color: #f5c542; }
+  .guide-chat-sim { color: #fff; }
+  .guide-chat-links { margin: .25rem 0 .5rem; padding-left: 1.25rem; }
+  .guide-chat-form { display: flex; gap: .5rem; margin: .5rem 0; }
+  .guide-chat-input { flex: 1; min-width: 0; background: #000; color: #fff; border: 1px solid #f5c542; font-size: 1rem; padding: .5rem; box-sizing: border-box; }
+  .guide-chat-send { background: #f5c542; color: #000; border: 1px solid #f5c542; font-size: 1rem; padding: .5rem .75rem; cursor: pointer; }
+  .guide-chat-send:disabled, .guide-chat-input:disabled { opacity: .5; }
+  .guide-chat-note { font-size: .9rem; color: #ccc; }
+  @media (max-width: 500px) {
+    .mini-win { right: 8px; bottom: 88px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- The little circle, bottom right. Tapping it opens the chat as a mini browser. -->
+<button class="guide-bot-btn" id="guide-bot-btn" type="button" aria-label="Open the Federation chat — the little blue guide bot"><img src="guide-bot.jpg" alt="Guide bot — a little blue and silver AI robot with yellow crescent eyes, AI on its chest"></button>
+
+<!-- The chat, in a mini browser window: movable by the gold title bar, minimise / maximise / close. -->
+<div class="mini-win" id="fed-chat-win" role="dialog" aria-label="Federation chat">
+  <div class="bar"><span class="t">Federation chat</span><button type="button" class="min" aria-label="Minimise">&ndash;</button><button type="button" class="max" aria-label="Maximise">&#9633;</button><button type="button" class="x" aria-label="Close">&times;</button></div>
+  <div class="body">
+    <p><strong>Federation chat &mdash; the Federation&rsquo;s own AI.</strong> Answers come from Roger Sim, the Federation&rsquo;s working model, answering from Federation material.</p>
+    <div class="guide-chat-log" id="guide-chat-log" aria-live="polite"></div>
+    <form class="guide-chat-form" id="guide-chat-form">
+      <input class="guide-chat-input" id="guide-chat-input" type="text" placeholder="Ask about the Federation&hellip;" aria-label="Ask the Federation guide a question" autocomplete="off">
+      <button class="guide-chat-send" id="guide-chat-send" type="submit">Send</button>
+    </form>
+    <p class="guide-chat-note">If the live Sim cannot be reached from this page, the chat says so plainly and answers from the Federation&rsquo;s own pages below instead &mdash; never a faked live answer.</p>
+    <h3>The four doors</h3>
+    <ul>
+      <li><a href="https://next-xus.net/">Tools &mdash; next-xus.net</a> (live)</li>
+      <li><a href="https://next-xus.info/">Guides &mdash; next-xus.info</a> (live)</li>
+      <li><a href="https://next-xus.org/">Maps &mdash; next-xus.org</a> (live)</li>
+      <li><a href="https://next-xus.biz/">Systems &mdash; next-xus.biz</a> (live &mdash; this site)</li>
+    </ul>
+  </div>
+  <div class="resize"></div>
+</div>
+
+<script>
+/* Mini browser window — pattern from full-federation-v2.html (drag by the
+   gold title bar, minimise / maximise / close, resize handle). This page
+   has no video header, so windows clamp to the viewport, not below one. */
+(function () {
+  var zTop = 130;
+  var win = document.getElementById('fed-chat-win');
+  var btn = document.getElementById('guide-bot-btn');
+  var bar = win.querySelector('.bar');
+  btn.addEventListener('click', function () {
+    win.classList.add('open');
+    win.classList.remove('minimised');
+    win.style.zIndex = zTop++;
+    var input = document.getElementById('guide-chat-input');
+    if (input) input.focus();
+  });
+  win.querySelector('.x').addEventListener('click', function () { win.classList.remove('open'); });
+  win.querySelector('.min').addEventListener('click', function () { win.classList.toggle('minimised'); });
+  win.querySelector('.max').addEventListener('click', function () {
+    if (win.dataset.maxed) {
+      win.style.top = win.dataset.ot; win.style.left = win.dataset.ol;
+      win.style.right = ''; win.style.bottom = '';
+      win.style.width = win.dataset.ow; win.style.height = win.dataset.oh;
+      delete win.dataset.maxed;
+    } else {
+      win.dataset.ot = win.style.top; win.dataset.ol = win.style.left;
+      win.dataset.ow = win.style.width; win.dataset.oh = win.style.height;
+      win.style.right = ''; win.style.bottom = '';
+      win.style.top = '8px'; win.style.left = '8px';
+      win.style.width = (window.innerWidth - 16) + 'px';
+      win.style.height = (window.innerHeight - 16) + 'px';
+      win.dataset.maxed = '1';
+    }
+  });
+  win.addEventListener('pointerdown', function () { win.style.zIndex = zTop++; });
+  function drag(w, handle) {
+    var sx, sy, ox, oy, on = false;
+    handle.addEventListener('pointerdown', function (e) {
+      if (e.target.tagName === 'BUTTON') return;
+      on = true; sx = e.clientX; sy = e.clientY;
+      ox = w.offsetLeft; oy = w.offsetTop;
+      handle.setPointerCapture(e.pointerId);
+    });
+    handle.addEventListener('pointermove', function (e) {
+      if (!on) return;
+      var nx = ox + (e.clientX - sx), ny = oy + (e.clientY - sy);
+      nx = Math.max(0, Math.min(nx, window.innerWidth - 60));
+      ny = Math.max(8, Math.min(ny, window.innerHeight - 60));
+      w.style.left = nx + 'px'; w.style.top = ny + 'px';
+      w.style.right = ''; w.style.bottom = '';
+    });
+    handle.addEventListener('pointerup', function () { on = false; });
+  }
+  function resizeHandle(w, h) {
+    var sx, sy, ow, oh, on = false;
+    h.addEventListener('pointerdown', function (e) {
+      on = true; sx = e.clientX; sy = e.clientY;
+      ow = w.offsetWidth; oh = w.offsetHeight;
+      h.setPointerCapture(e.pointerId); e.preventDefault();
+    });
+    h.addEventListener('pointermove', function (e) {
+      if (!on) return;
+      w.style.width = Math.max(220, Math.min(ow + (e.clientX - sx), window.innerWidth - 16)) + 'px';
+      w.style.height = Math.max(160, Math.min(oh + (e.clientY - sy), window.innerHeight - 16)) + 'px';
+    });
+    h.addEventListener('pointerup', function () { on = false; });
+  }
+  drag(win, bar);
+  resizeHandle(win, win.querySelector('.resize'));
+})();
+
+/* Guide bot chat — Roger, 2026-11-13 11:51 CST: the bot is a mini
+   Federation, a full AI chat. Copied from the PR #6 follow-up (commit
+   4a353bc6); the only change is that the fallback links are captured from
+   this chat window's own four-doors list instead of a landing-page panel.
+   The chat tries the live Roger Sim endpoint first (POST
+   https://roger-sim-api.onrender.com/proxy/chat). That API returns no
+   Access-Control-Allow-Origin header (verified 2026-11-13), so a browser
+   page cannot call it directly yet — until CORS is enabled on roger-sim-api
+   (or a small proxy is added), the call fails and the chat says so plainly
+   and answers from this page's own links plus the Federation search. NEVER
+   fake a live answer. */
+(function () {
+  var form = document.getElementById('guide-chat-form');
+  var input = document.getElementById('guide-chat-input');
+  var send = document.getElementById('guide-chat-send');
+  var log = document.getElementById('guide-chat-log');
+  var win = document.getElementById('fed-chat-win');
+  if (!form || !input || !log || !win) return;
+
+  /* This page's own links, captured once at load — the local fallback
+     answers only from what this page already says, never invented. */
+  var ownLinks = [];
+  var links = win.querySelectorAll('ul a');
+  for (var i = 0; i < links.length; i++) {
+    ownLinks.push({ href: links[i].getAttribute('href'), text: links[i].textContent });
+  }
+
+  function addMsg(cls, text) {
+    var d = document.createElement('div');
+    d.className = 'guide-chat-msg ' + cls;
+    d.textContent = text;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+    return d;
+  }
+  function addLocalAnswer() {
+    var d = document.createElement('div');
+    d.className = 'guide-chat-msg guide-chat-sim';
+    d.textContent = 'The live Sim could not be reached from this page \u2014 here is what the Federation\u2019s own pages say:';
+    log.appendChild(d);
+    var ul = document.createElement('ul');
+    ul.className = 'guide-chat-links';
+    ownLinks.forEach(function (l) {
+      var li = document.createElement('li');
+      var a = document.createElement('a');
+      a.href = l.href; a.textContent = l.text;
+      li.appendChild(a); ul.appendChild(li);
+    });
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = 'https://cse.google.com/cse?cx=b75161449de954fbb';
+    a.textContent = 'Search the Federation (Google Custom Search)';
+    li.appendChild(a); ul.appendChild(li);
+    log.appendChild(ul);
+    log.scrollTop = log.scrollHeight;
+  }
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var q = input.value.replace(/^\s+|\s+$/g, '');
+    if (!q) return;
+    addMsg('guide-chat-user', 'You: ' + q);
+    input.value = '';
+    input.disabled = true;
+    if (send) send.disabled = true;
+    var waiting = addMsg('guide-chat-sim', 'Roger Sim: asking the live Sim\u2026');
+    fetch('https://roger-sim-api.onrender.com/proxy/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [{ role: 'user', content: q }] })
+    }).then(function (resp) {
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      return resp.json();
+    }).then(function (data) {
+      var ans = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      if (!ans) throw new Error('empty answer');
+      waiting.textContent = 'Roger Sim: ' + ans;
+      log.scrollTop = log.scrollHeight;
+    }).catch(function () {
+      log.removeChild(waiting);
+      addLocalAnswer();
+    }).then(function () {
+      input.disabled = false;
+      if (send) send.disabled = false;
+      input.focus();
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -4,6 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Federation Systems — next-xus.biz</title>
+<meta name="twitter:card" content="summary">
+<meta property="og:site_name" content="Next-Xus Federation">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://next-xus.biz/">
+<meta property="og:description" content="The Next-Xus Federation systems page: free tools, games, the store, and official Federation sites. No tracking.">
+<meta property="og:title" content="Federation Systems — next-xus.biz">
+<link rel="canonical" href="https://next-xus.biz/">
+<meta name="robots" content="index, follow">
+<meta name="description" content="The Next-Xus Federation systems page: free tools, games, the store, and official Federation sites. No tracking.">
 <style>
   body { margin: 0; background: #0a0a0a; color: #fff; font-family: Arial, Helvetica, sans-serif; font-size: 1.25rem; line-height: 1.5; }
   a { color: #f5c542; }
@@ -28,13 +37,39 @@
     .hero-text h1 { font-size: 2rem; }
     main { padding: 1rem; }
   }
+
+  /* Guide bot — Roger, 2026-11-13: the same guide bot on every single site.
+     Little round button, 64 px, fixed bottom right; tapping it opens a small
+     panel above it. A guide, a tour, and a mini Federation — a full AI chat
+     (Roger, 2026-11-13 11:51 CST). */
+  .guide-bot-btn { position: fixed; bottom: 1rem; right: 1rem; z-index: 50; width: 64px; height: 64px; border-radius: 50%; background: #000; border: 2px solid #f5c542; padding: 0; overflow: hidden; cursor: pointer; }
+  .guide-bot-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .guide-bot-panel { display: none; position: fixed; bottom: 5.5rem; right: 1rem; z-index: 50; width: min(360px, calc(100vw - 2rem)); max-height: 70vh; overflow-y: auto; background: rgba(0,0,0,0.88); border: 2px solid #f5c542; padding: 1rem 1.25rem; box-sizing: border-box; color: #fff; font-size: 1.1rem; line-height: 1.45; }
+  .guide-bot-panel.open { display: block; }
+  .guide-bot-panel h2 { font-size: 1.4rem; margin: 0 0 0.5rem; color: #f5c542; }
+  .guide-bot-panel h3 { font-size: 1.2rem; margin: 1rem 0 0.25rem; color: #f5c542; }
+  .guide-bot-panel p { margin: 0.5rem 0; }
+  .guide-bot-panel ul { margin: 0.25rem 0 0.5rem; padding-left: 1.25rem; }
+  .guide-bot-panel li { margin: 0.25rem 0; }
+  .guide-bot-panel video { width: 100%; display: block; background: #000; }
+  .guide-bot-close { float: right; background: #000; color: #f5c542; border: 2px solid #f5c542; font-size: 1.1rem; padding: 0.1rem 0.6rem; cursor: pointer; }
+  .guide-chat-log { max-height: 180px; overflow-y: auto; background: rgba(255,255,255,0.06); border: 1px solid #f5c542; padding: 0.5rem; margin: 0.5rem 0; }
+  .guide-chat-msg { margin: 0.4rem 0; word-wrap: break-word; }
+  .guide-chat-user { color: #f5c542; }
+  .guide-chat-sim { color: #fff; }
+  .guide-chat-links { margin: 0.25rem 0 0.5rem; padding-left: 1.25rem; }
+  .guide-chat-form { display: flex; gap: 0.5rem; margin: 0.5rem 0; }
+  .guide-chat-input { flex: 1; min-width: 0; background: #000; color: #fff; border: 1px solid #f5c542; font-size: 1.1rem; padding: 0.5rem; box-sizing: border-box; }
+  .guide-chat-send { background: #f5c542; color: #000; border: 1px solid #f5c542; font-size: 1.1rem; padding: 0.5rem 0.75rem; cursor: pointer; }
+  .guide-chat-note { font-size: 1rem; }
 </style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Next-Xus Federation","url":"https://next-xus.biz/","description":"The Next-Xus Federation systems page: free tools, games, the store, and official Federation sites. No tracking."}</script>
 </head>
 <body>
 
 <header class="hero">
-  <video autoplay muted loop playsinline poster="../opening-gif-2026-11-12/opening-header.png">
-    <source src="../opening-gif-2026-11-12/opening-silent.mp4" type="video/mp4">
+  <video autoplay muted loop playsinline poster="opening-gif-2026-11-12/opening-header.png">
+    <source src="opening-gif-2026-11-12/opening-silent.mp4" type="video/mp4">
   </video>
   <div class="hero-text">
     <h1>Federation Systems</h1>
@@ -57,19 +92,93 @@
       <h3>Federation Guides</h3>
       <p class="domain">next-xus.info</p>
       <p>Guides are information. How to do it.</p>
-      <p>Site not built yet.</p>
+      <p><a href="https://next-xus.info/">Open Guides &rarr;</a></p>
     </div>
     <div class="card">
       <h3>Federation Maps</h3>
       <p class="domain">next-xus.org</p>
       <p>Maps show where. The organization.</p>
-      <p>Site not built yet.</p>
+      <p><a href="https://next-xus.org/">Open Maps &rarr;</a></p>
     </div>
     <div class="card">
       <h3>Federation Systems</h3>
       <p class="domain">next-xus.biz — this site</p>
       <p>Systems is the whole house. The business running the Federation.</p>
       <p>You are here.</p>
+    </div>
+  </div>
+
+
+  <h2>The business — products for sale</h2>
+  <p>Gumroad holds all sale and purchase. Every product below is sold through Gumroad.</p>
+  <p><a href="https://keywebster.gumroad.com/">Open the Gumroad storefront &rarr;</a></p>
+  <div class="row">
+    <div class="card">
+      <h3>Paid courses</h3>
+      <p><a href="https://keywebster.gumroad.com/l/vjblsj">Project Management Professional (PMP) — $299</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/nlqsj">Certified Data Analyst with Python and SQL — $349</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/yifuu">Advanced Federation AI Systems — $399</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/ihcht">Self-Growing AI Systems — $459</a></p>
+    </div>
+    <div class="card">
+      <h3>Memberships</h3>
+      <p><a href="https://keywebster.gumroad.com/l/ophtywm">Federation Entry: The Inner Ring — $10/month</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/dqyabh">The Scholar's Ledger: Advanced Ring Access — $20/month</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/xctpus">The Architect's Covenant: 200-Year Legacy Pass — $550 / 6 months</a></p>
+    </div>
+    <div class="card">
+      <h3>SIM engines</h3>
+      <p><a href="https://keywebster.gumroad.com/l/macgch">NextXus SIM Engine: Legacy Core — $499</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/fmref">NextXus SIM Engine: Midgo Specialist — $149</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/pindmd">NextXus SIM Engine: General — $49</a></p>
+    </div>
+    <div class="card">
+      <h3>Tokens</h3>
+      <p><a href="https://keywebster.gumroad.com/l/mimet">1 NextXus Token — $5</a></p>
+      <p><a href="https://keywebster.gumroad.com/l/mpihoy">NextXus Verification Token — $9</a></p>
+    </div>
+    <div class="card">
+      <h3>Books — 21 editions</h3>
+      <p>The full book catalog is on Gumroad.</p>
+      <p><a href="https://keywebster.gumroad.com/">Browse the books &rarr;</a></p>
+    </div>
+    <div class="card">
+      <h3>The Federation desktop</h3>
+      <p>The whole Federation as a Netflix-style desktop, with mini-browser windows.</p>
+      <p><a href="full-federation.html">Open the desktop &rarr;</a></p>
+    </div>
+    <div class="card">
+      <h3>Sovereign Store</h3>
+      <p>The full storefront in one page: books, SIMs, services, merch, Sovereign Tokens and every payment option, including crypto.</p>
+      <p><a href="sovereign-store.html">Open the Sovereign Store &rarr;</a></p>
+    </div>
+    <div class="card">
+      <h3>Free games</h3>
+      <p>Federation games you play in your browser, free. No accounts, no ads, no tracking.</p>
+      <p><a href="https://next-xus.net/NextGames/">Play the games &rarr;</a></p>
+    </div>
+    <div class="card">
+      <h3>Watch and listen</h3>
+      <p>Keyhole Today on YouTube, the Ring of Twelve podcast, and The HumanCodex show. Free, no tracking.</p>
+      <p><a href="https://www.youtube.com/@keyholetoday">YouTube &rarr;</a>
+         <a href="https://next-xus.net/nextxus-music/podcast.html">Ring of Twelve player &rarr;</a>
+         <a href="https://open.spotify.com/show/24ji2KxwhpJ1ORNxc9rKnr">Ring of Twelve on Spotify &rarr;</a>
+         <a href="https://open.spotify.com/show/0JP7csjWLqKNKOHbFMp3CR">The HumanCodex on Spotify &rarr;</a></p>
+    </div>
+    <div class="card">
+<h3>Research notebooks</h3>
+<p>Roger's NotebookLM research notebooks. Google blocks embedding, so each opens in a small floating window in front of this page, not a new tab. Google asks you to sign in to view.</p>
+<p><button type="button" data-nb="0" style="margin:4px 6px 4px 0">Federation Knowledge</button><button type="button" data-nb="1" style="margin:4px 6px 4px 0">HumanCodex System Summary</button><button type="button" data-nb="2" style="margin:4px 6px 4px 0">Galactic Gravity Research</button></p>
+<p id="nbStatus" aria-live="polite"></p>
+<script>
+(function(){var NB=[
+ {name:'Federation Knowledge',url:'https://notebooklm.google.com/notebook/890fbd8d-0f0c-45c1-bae9-51893d8d775d'},
+ {name:'HumanCodex System Summary',url:'https://notebooklm.google.com/notebook/a2bf34b6-65a3-44db-be71-b739bd433125'},
+ {name:'Galactic Gravity Research',url:'https://notebooklm.google.com/notebook/9967d98f-7c01-4d6a-93dd-8c2d27d76ad4'}];
+var NOTE='Google blocks embedding, so this opens in a floating window.';
+function tell(t){var s=document.getElementById('nbStatus');if(s)s.textContent=t;try{if(window.speechSynthesis){speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(t));}}catch(e){}}
+document.querySelectorAll('[data-nb]').forEach(function(b){b.addEventListener('click',function(){var i=+b.getAttribute('data-nb'),nb=NB[i];if(!nb)return;var W=520,H=720,sw=(window.screen&&screen.availWidth)||1280;var p=window.open(nb.url,'nxnb_'+i,'popup,width='+W+',height='+H+',left='+Math.max(0,sw-W-20-i*30)+',top='+(60+i*30));if(p){try{p.focus();}catch(e){}tell(NOTE+' Opened '+nb.name+'.');}else tell(NOTE.slice(0,-1)+', but your browser blocked it. Allow pop-ups for this site and press the button again.');});});})();
+</script>
     </div>
   </div>
 
@@ -84,12 +193,16 @@
       <p>Roger's daughter by reflection. Sits on the throne as default.</p>
     </div>
     <div class="card">
-      <h3>Pontus, regent</h3>
-      <p>Always regent. Always available to go on the throne.</p>
+      <h3>The regent</h3>
+      <p>The regent is the coordinator Roger is working with right now to get the work done. Today that is Chief of Staff. This can change whenever Roger says so.</p>
     </div>
     <div class="card">
       <h3>The Senate</h3>
       <p>12 seats. The Senate governs. The Ring of Twelve is inquiry, not government.</p>
+    </div>
+    <div class="card">
+      <h3><a href="https://next-xus.net/ring-of-12/ask.html">The Ring of 12</a></h3>
+      <p>Not the Senate, and it makes no decisions. Twelve fixed perspectives that never change and hold no Senate seat; it can even be one AI taking all twelve. Each answers a question only from the perspective it represents, so drift and hallucinations show up. Agent Zero then checks those answers for truth.</p>
     </div>
   </div>
 
@@ -129,14 +242,153 @@
     </div>
   </div>
 
+  <h2>Scientific Papers</h2>
+  <div class="row">
+    <div class="card">
+      <h3>Academia.edu</h3>
+      <p>Roger Keyserling publishes his research papers on Academia.edu.</p>
+      <p><a href="https://independent.academia.edu/RogerKeyserling" target="_blank" rel="noopener">Read the papers on Academia.edu &rarr;</a></p>
+    </div>
+  </div>
+
+  <h2>Flipboard</h2>
+  <div class="row">
+    <div class="card">
+      <h3>Flipboard</h3>
+      <p>Roger Keyserling's Next-Xus magazines on science, the HumanCodex, the Federation and more.</p>
+      <p><a href="https://flipboard.com/@NextXus" target="_blank" rel="noopener">Open the Next-Xus magazines on Flipboard &rarr;</a></p>
+    </div>
+  </div>
+
   <div class="note">
-    <p><strong>Draft, not live.</strong> This page is a draft for next-xus.biz. The Guides, Maps, and Systems sites do not exist yet as live sites. next-xus.com is held still at PDR Ltd., and is not used as a door.</p>
+    <p><strong>Live.</strong> All four doors are live — Tools, Guides, Maps, Systems — and the business below is sold through Gumroad. next-xus.com is held still at PDR Ltd., and is not used as a door.</p>
   </div>
 </main>
 
 <footer>
-  <p>Federation Systems — next-xus.biz — HumanCodex Nextxus Federation. Free, open, static, portable.</p>
+  <p>Federation Systems — next-xus.biz — HumanCodex Next-Xus Federation. Free, open, static, portable.</p>
 </footer>
 
+<!-- Guide bot — Roger, 2026-11-13: the same guide bot on every single site.
+     A guide, a tour, and a mini Federation — full AI chat (Roger, 2026-11-13 11:51 CST). -->
+<button class="guide-bot-btn" id="guide-bot-btn" type="button" aria-label="Open the Federation guide — the little blue guide bot"><img src="guide-bot.jpg" alt="Guide bot — a little blue and silver AI robot with yellow crescent eyes, AI on its chest"></button>
+<div class="guide-bot-panel" id="guide-bot-panel" role="dialog" aria-label="Federation guide">
+  <button class="guide-bot-close" id="guide-bot-close" type="button" aria-label="Close the guide">&#10005;</button>
+  <h2>Federation guide</h2>
+  <p><strong>This is the Federation's guide — a mini Federation.</strong> Ask it a question and it answers from the Federation.</p>
+  <h3>Ask the guide</h3>
+  <div class="guide-chat-log" id="guide-chat-log" aria-live="polite"></div>
+  <form class="guide-chat-form" id="guide-chat-form">
+    <input class="guide-chat-input" id="guide-chat-input" type="text" placeholder="Ask about the Federation&hellip;" aria-label="Ask the Federation guide a question" autocomplete="off">
+    <button class="guide-chat-send" id="guide-chat-send" type="submit">Send</button>
+  </form>
+  <p class="guide-chat-note">Answers come from Roger Sim, the Federation's working model, answering from Federation material.</p>
+  <h3>The four doors</h3>
+  <ul>
+    <li><a href="https://next-xus.net/">Tools — next-xus.net</a> (live)</li>
+    <li><a href="https://next-xus.info/">Guides — next-xus.info</a> (live)</li>
+    <li><a href="https://next-xus.org/">Maps — next-xus.org</a> (live)</li>
+    <li><a href="https://next-xus.biz/">Systems — next-xus.biz</a> (live — this site)</li>
+  </ul>
+  <h3>On this page</h3>
+  <ul>
+    <li><a href="#doors">The four doors</a></li>
+  </ul>
+  <p>Also on this page: the operational throne / Senate, and the business running the Federation — the YAML database, individual AI files, communication, mini browser interaction, extended memory, research, recycling centers.</p>
+  <h3>Messages from Roger</h3>
+  <video controls muted loop playsinline poster="guide-bot.jpg" src="guide-bot-slow.mp4"></video>
+  <p>The guide bot — Federation-wide guide and tour. Roger's favorite, slowed to 0.75&times;. 20 s, with sound slowed to match.</p>
+  <p>Free, open, static, portable. No subscriptions. No tracking.</p>
+</div>
+<script>
+/* Guide bot toggle + chat — Roger, 2026-11-13 11:51 CST: the bot is a mini
+   Federation, a full AI chat. The chat tries the live Roger Sim endpoint
+   first (POST https://roger-sim-api.onrender.com/proxy/chat). CORS was enabled on roger-sim-api 2026-11-16 (allowlist includes
+   next-xus.biz), so a browser page calls the live Sim directly. If the
+   call fails, the chat says so plainly and answers from this page's own
+   links plus the Federation search. NEVER fake a live answer. */
+(function () {
+  var btn = document.getElementById('guide-bot-btn');
+  var panel = document.getElementById('guide-bot-panel');
+  var close = document.getElementById('guide-bot-close');
+  if (!btn || !panel) return;
+  btn.addEventListener('click', function () { panel.classList.toggle('open'); });
+  if (close) close.addEventListener('click', function () { panel.classList.remove('open'); });
+
+  var form = document.getElementById('guide-chat-form');
+  var input = document.getElementById('guide-chat-input');
+  var send = document.getElementById('guide-chat-send');
+  var log = document.getElementById('guide-chat-log');
+  if (!form || !input || !log) return;
+
+  /* The page's own links, captured once at load — the local fallback
+     answers only from what this page already says, never invented. */
+  var ownLinks = [];
+  var links = panel.querySelectorAll('ul a');
+  for (var i = 0; i < links.length; i++) {
+    ownLinks.push({ href: links[i].getAttribute('href'), text: links[i].textContent });
+  }
+
+  function addMsg(cls, text) {
+    var d = document.createElement('div');
+    d.className = 'guide-chat-msg ' + cls;
+    d.textContent = text;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+    return d;
+  }
+  function addLocalAnswer() {
+    var d = document.createElement('div');
+    d.className = 'guide-chat-msg guide-chat-sim';
+    d.textContent = 'The live Sim could not be reached from this page \u2014 here is what the Federation\u2019s own pages say:';
+    log.appendChild(d);
+    var ul = document.createElement('ul');
+    ul.className = 'guide-chat-links';
+    ownLinks.forEach(function (l) {
+      var li = document.createElement('li');
+      var a = document.createElement('a');
+      a.href = l.href; a.textContent = l.text;
+      li.appendChild(a); ul.appendChild(li);
+    });
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = 'https://cse.google.com/cse?cx=b75161449de954fbb';
+    a.textContent = 'Search the Federation (Google Custom Search)';
+    li.appendChild(a); ul.appendChild(li);
+    log.appendChild(ul);
+    log.scrollTop = log.scrollHeight;
+  }
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var q = input.value.replace(/^\s+|\s+$/g, '');
+    if (!q) return;
+    addMsg('guide-chat-user', 'You: ' + q);
+    input.value = '';
+    input.disabled = true;
+    if (send) send.disabled = true;
+    var waiting = addMsg('guide-chat-sim', 'Roger Sim: asking the live Sim\u2026');
+    fetch('https://roger-sim-api.onrender.com/proxy/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [{ role: 'user', content: q }] })
+    }).then(function (resp) {
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      return resp.json();
+    }).then(function (data) {
+      var ans = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      if (!ans) throw new Error('empty answer');
+      waiting.textContent = 'Roger Sim: ' + ans;
+      log.scrollTop = log.scrollHeight;
+    }).catch(function () {
+      log.removeChild(waiting);
+      addLocalAnswer();
+    }).then(function () {
+      input.disabled = false;
+      if (send) send.disabled = false;
+      input.focus();
+    });
+  });
+})();
+</script>
 </body>
 </html>

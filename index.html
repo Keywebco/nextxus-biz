@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://next-xus.net/federation-ui/theme.css">
 <title>Federation Systems — next-xus.biz</title>
 <meta name="twitter:card" content="summary">
 <meta property="og:site_name" content="Next-Xus Federation">
@@ -65,9 +66,23 @@
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Next-Xus Federation","url":"https://next-xus.biz/","description":"The Next-Xus Federation systems page: free tools, games, the store, and official Federation sites. No tracking."}</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style id="nx-align">
+/* Next-Xus shared theme alignment: maps this page onto federation-ui tokens. */
+body.nx-theme{font-size:1.15rem;line-height:1.6}
+body.nx-theme a{color:var(--nx-gold,#f2c14e)}
+body.nx-theme .hero-text{background:rgba(7,13,22,.82);border:1px solid var(--nx-line,#2a4362);border-radius:var(--nx-radius,12px)}
+body.nx-theme .hero-text h1,body.nx-theme h2,body.nx-theme .card h3{color:var(--nx-gold,#f2c14e)}
+body.nx-theme .hero-text h1{letter-spacing:-.01em}
+body.nx-theme .card{background:var(--nx-surface,#0f1c2e);border:1px solid var(--nx-line,#2a4362);border-radius:var(--nx-radius,12px)}
+body.nx-theme .card .domain{color:var(--nx-dim,#c2cedb)}
+body.nx-theme .note{background:var(--nx-surface,#0f1c2e);border-left-color:var(--nx-gold,#f2c14e);border-radius:0 var(--nx-radius,12px) var(--nx-radius,12px) 0}
+body.nx-theme > footer{color:var(--nx-dim,#c2cedb)}
+body.nx-theme .guide-bot-btn,body.nx-theme .guide-bot-panel{border-color:var(--nx-gold,#f2c14e)}
+body.nx-theme .guide-bot-panel{background:rgba(7,13,22,.97)}
+</style>
 </head>
-<body>
-
+<body class="nx-theme" data-nx-site="business">
+<noscript><div class="nx-bar"><nav class="nx-bar-inner" aria-label="Next-Xus Federation"><a class="nx-brand" href="https://next-xus.net/"><span class="nx-mark" aria-hidden="true">NX</span>Next-Xus Federation</a><ul class="nx-links"><li><a href="https://next-xus.net/">Home</a></li><li><a href="https://next-xus.org/">Codex</a></li><li><a href="https://next-xus.net/dragon/">Dragons</a></li><li><a href="https://next-xus.net/nextxus-music/">Music</a></li><li><a href="https://next-xus.biz/" aria-current="page">Business</a></li><li><a href="https://next-xus.info/">Info</a></li></ul></nav></div></noscript>
 <header class="hero">
   <video autoplay muted loop playsinline poster="opening-gif-2026-11-12/opening-header.png">
     <source src="opening-gif-2026-11-12/opening-silent.mp4" type="video/mp4">
@@ -391,5 +406,6 @@ document.querySelectorAll('[data-nb]').forEach(function(b){b.addEventListener('c
   });
 })();
 </script>
+<script src="https://next-xus.net/federation-ui/chrome.js" defer></script>
 </body>
 </html>
